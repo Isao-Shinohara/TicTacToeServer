@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using TicTacToeServer.Hubs;
+using TicTacToeServer.Infrastructures;
 
 namespace TicTacToeServer
 {
@@ -58,7 +59,7 @@ namespace TicTacToeServer
 				options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
 			});
 
-			//services.AddDbContext<SignalRContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
+			services.AddDbContext<SignalRContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
