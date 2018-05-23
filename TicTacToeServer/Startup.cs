@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MessagePack.AspNetCoreMvcFormatter;
+using MessagePack.ImmutableCollection;
+using MessagePack.ReactivePropertyExtension;
+using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
+using TicTacToeServer.Hubs;
+using TicTacToeServer.Infrastructures;
 
 namespace TicTacToeServer
 {
@@ -21,7 +29,37 @@ namespace TicTacToeServer
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
+			services.AddMemoryCache();
+			services.AddSignalR();
+			services.AddCors(options => {
+				options.AddPolicy("MyPolicy", builder => {
+					builder.AllowAnyOrigin()
+						   .AllowAnyMethod()
+						   .AllowAnyHeader();
+				});
+			});
+
+			// set extensions to default resolver.
+			MessagePack.Resolvers.CompositeResolver.RegisterAndSetAsDefault(
+				// enable extension packages first
+				ImmutableCollectionResolver.Instance,
+				ReactivePropertyResolver.Instance,
+				MessagePack.Unity.Extension.UnityBlitResolver.Instance,
+				MessagePack.Unity.UnityResolver.Instance,
+
+				// finaly use standard(default) resolver
+				StandardResolver.Instance
+			);
+
+			//services.AddMvc();
+			services.AddMvc().AddMvcOptions(options => {
+				// MessagePack.
+				options.FormatterMappings.SetMediaTypeMappingForFormat("msgpack", new MediaTypeHeaderValue("application/x-msgpack"));
+				options.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Instance));
+				options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
+			});
+
+			services.AddDbContext<SignalRContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,13 +71,23 @@ namespace TicTacToeServer
 				app.UseExceptionHandler("/Home/Error");
 			}
 
-			app.UseStaticFiles();
+			app.UseStaticFiles(new StaticFileOptions() {
+				ServeUnknownFileTypes = true,
+				DefaultContentType = "application/octet-stream"
+			});
+
+			app.UseCors("MyPolicy");
 
 			app.UseMvc(routes => {
 				routes.MapRoute(
 					name: "default",
 					template: "{controller=Home}/{action=Index}/{id?}");
 			});
+
+			app.UseSignalR(route => {
+				route.MapHub<SignalRHub>("/signalr");
+			});
+			app.UseDefaultFiles();
 		}
 	}
 }
