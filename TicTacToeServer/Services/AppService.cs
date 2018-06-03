@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
@@ -35,16 +33,14 @@ namespace TicTacToeServer.Services
 
 		public SignalRClientMessage StartSingleGame(string connectionId)
 		{
-			List<string> clients = new List<string> { connectionId };
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(clients, method);
+			return new SignalRClientMessage(connectionId, method);
 		}
 
 		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
 		{
-			List<string> clients = new List<string> { connectionId };
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(clients, method, roomId);
+			return new SignalRClientMessage(connectionId, method, roomId);
 		}
 	}
 }
