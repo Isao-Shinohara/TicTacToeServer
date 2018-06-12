@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
@@ -38,6 +39,12 @@ namespace TicTacToeServer.Services
 		}
 
 		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
+		{
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method, roomId);
+		}
+
+		internal SignalRClientMessage JoinRoom(string connectionId, int roomId)
 		{
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
 			return new SignalRClientMessage(connectionId, method, roomId);
