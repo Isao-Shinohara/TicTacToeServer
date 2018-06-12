@@ -14,7 +14,7 @@ namespace TicTacToeServer.Hubs
 
 		public SignalRHub(SignalRContext context)
 		{
-			AppSignalRLogger.Level = AppSignalRLogger.Loglevels.Debug;
+			AppSignalRLogger.Level = AppSignalRLogger.Loglevels.Verbose;
 			appService = new AppService(context);
 		}
 
@@ -43,6 +43,13 @@ namespace TicTacToeServer.Hubs
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
 			var message = appService.CreateRoom(Context.ConnectionId, roomId);
+			CallClientMethod(message);
+		}
+
+		public void JoinRoom(int roomId)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
+			var message = appService.JoinRoom(Context.ConnectionId, roomId);
 			CallClientMethod(message);
 		}
 
