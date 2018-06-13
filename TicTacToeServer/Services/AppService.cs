@@ -49,7 +49,7 @@ namespace TicTacToeServer.Services
 		internal SignalRClientMessage JoinRoom(string connectionId, int roomId)
 		{
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			string message = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
+			string message = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
 			return new SignalRClientMessage(connectionId, method, roomId, message);
 		}
 	}
