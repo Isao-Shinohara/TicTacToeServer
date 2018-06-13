@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using TicTacToeServer.Core;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
 
@@ -41,13 +42,15 @@ namespace TicTacToeServer.Services
 		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
 		{
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, roomId);
+			string message = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
+			return new SignalRClientMessage(connectionId, method, roomId, message);
 		}
 
 		internal SignalRClientMessage JoinRoom(string connectionId, int roomId)
 		{
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, roomId);
+			string message = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
+			return new SignalRClientMessage(connectionId, method, roomId, message);
 		}
 	}
 }
