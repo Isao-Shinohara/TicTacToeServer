@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TicTacToeServer.Models;
 
 namespace TicTacToeServer.Infrastructures
 {
@@ -8,6 +9,7 @@ namespace TicTacToeServer.Infrastructures
 		{
 		}
 
-		public DbSet<SignalRItem> SignalRItemList { get; set; }
+		public DbSet<SignalRItem> SignalRItemSet { get; set; }
+		public DbSet<PanelAreaModel> PanelAreaModelSet { get; set; }
 	}
 }

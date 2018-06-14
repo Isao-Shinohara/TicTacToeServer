@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToeServer.Core;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Models;
 using TicTacToeServer.Services;
 
 namespace TicTacToeServer.Hubs
@@ -57,6 +58,13 @@ namespace TicTacToeServer.Hubs
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
 			var message = appService.StartSingleGame(Context.ConnectionId);
+			CallClientMethod(message);
+		}
+
+		public void SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1} {2}", MethodBase.GetCurrentMethod().Name, panelAreaType, turnType);
+			var message = appService.SelectPanelArea(Context.ConnectionId, panelAreaType, turnType);
 			CallClientMethod(message);
 		}
 
