@@ -4,6 +4,7 @@ using System.Reflection;
 using TicTacToeServer.Core;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Models;
 
 namespace TicTacToeServer.Services
 {
@@ -33,12 +34,6 @@ namespace TicTacToeServer.Services
 			}
 		}
 
-		public SignalRClientMessage StartSingleGame(string connectionId)
-		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method);
-		}
-
 		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
 		{
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
@@ -51,6 +46,18 @@ namespace TicTacToeServer.Services
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
 			string message = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
 			return new SignalRClientMessage(connectionId, method, roomId, message);
+		}
+
+		public SignalRClientMessage InitializeSingleGame(string connectionId)
+		{
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method, TurnType._1stPlayer);
+		}
+
+		public SignalRClientMessage StartSingleGame(string connectionId)
+		{
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method);
 		}
 	}
 }
