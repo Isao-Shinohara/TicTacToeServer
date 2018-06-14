@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TicTacToeServer.Core;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Models;
 
 namespace TicTacToeServer.Services
 {
@@ -18,7 +20,7 @@ namespace TicTacToeServer.Services
 
 		public void AddPlayer(string connectionId)
 		{
-			if (!signalRContext.SignalRItemList.Any(item => item.ConnectionId == connectionId)) {
+			if (!signalRContext.SignalRItemSet.Any(item => item.ConnectionId == connectionId)) {
 				signalRContext.Update(new SignalRItem { ConnectionId = connectionId });
 				signalRContext.SaveChanges();
 			}
@@ -26,17 +28,11 @@ namespace TicTacToeServer.Services
 
 		public void RemovePlayer(string connectionId)
 		{
-			SignalRItem signalRItem = signalRContext.SignalRItemList.FirstOrDefault(item => item.ConnectionId == connectionId);
+			SignalRItem signalRItem = signalRContext.SignalRItemSet.FirstOrDefault(item => item.ConnectionId == connectionId);
 			if (signalRItem != null) {
 				signalRContext.Remove(signalRItem);
 				signalRContext.SaveChanges();
 			}
-		}
-
-		public SignalRClientMessage StartSingleGame(string connectionId)
-		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method);
 		}
 
 		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
@@ -51,6 +47,81 @@ namespace TicTacToeServer.Services
 			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
 			string message = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
 			return new SignalRClientMessage(connectionId, method, roomId, message);
+		}
+
+		public SignalRClientMessage InitializeSingleGame(string connectionId)
+		{
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method, TurnType._1stPlayer);
+		}
+
+		public SignalRClientMessage StartSingleGame(string connectionId)
+		{
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method);
+		}
+
+		public SignalRClientMessage SelectPanelArea(string connectionId, PanelAreaType panelAreaType, TurnType turnType)
+		{
+			signalRContext.Update(new PanelAreaModel(panelAreaType, turnType));
+			signalRContext.SaveChanges();
+
+			var panelAreaModelList = signalRContext.PanelAreaModelSet.Where(x => x.TurnType == turnType).ToList();
+			var isClear = IsClear(panelAreaModelList);
+			AppSignalRLogger.LogVerbose("[isClear '{0}']", isClear);
+
+			var isEnd = IsEnd(signalRContext.PanelAreaModelSet.ToList());
+			AppSignalRLogger.LogVerbose("[isEnd '{0}']", isClear);
+
+			var resultType = ResultType.None;
+			if (isClear) resultType = ResultType.Win;
+			if (isEnd) resultType = ResultType.Draw;
+			AppSignalRLogger.LogVerbose("[resultType '{0}']", resultType);
+
+			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
+			return new SignalRClientMessage(connectionId, method, panelAreaType, resultType);
+		}
+
+		private bool IsClear(List<PanelAreaModel> list)
+		{
+			var existsArea1 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area1);
+			var existsArea2 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area2);
+			var existsArea3 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area3);
+			var existsArea4 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area4);
+			var existsArea5 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area5);
+			var existsArea6 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area6);
+			var existsArea7 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area7);
+			var existsArea8 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area8);
+			var existsArea9 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area9);
+
+			// Vertical
+			var isClear = existsArea1 && existsArea2 && existsArea3;
+			if (isClear) return true;
+			isClear = existsArea4 && existsArea5 && existsArea6;
+			if (isClear) return true;
+			isClear = existsArea7 && existsArea8 && existsArea9;
+			if (isClear) return true;
+
+			// Horizontal
+			isClear = existsArea1 && existsArea4 && existsArea7;
+			if (isClear) return true;
+			isClear = existsArea2 && existsArea5 && existsArea8;
+			if (isClear) return true;
+			isClear = existsArea7 && existsArea8 && existsArea9;
+			if (isClear) return true;
+
+			// Diagonal
+			isClear = existsArea1 && existsArea5 && existsArea9;
+			if (isClear) return true;
+			isClear = existsArea3 && existsArea5 && existsArea7;
+			if (isClear) return true;
+
+			return false;
+		}
+
+		private bool IsEnd(List<PanelAreaModel> list)
+		{
+			return list.Count >= 9;
 		}
 	}
 }

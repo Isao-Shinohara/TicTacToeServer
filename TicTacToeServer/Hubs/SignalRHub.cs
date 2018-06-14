@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToeServer.Core;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Models;
 using TicTacToeServer.Services;
 
 namespace TicTacToeServer.Hubs
@@ -32,13 +33,6 @@ namespace TicTacToeServer.Hubs
 			return base.OnDisconnectedAsync(e);
 		}
 
-		public void StartSingleGame()
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var message = appService.StartSingleGame(Context.ConnectionId);
-			CallClientMethod(message);
-		}
-
 		public void CreateRoom(int roomId)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
@@ -50,6 +44,27 @@ namespace TicTacToeServer.Hubs
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
 			var message = appService.JoinRoom(Context.ConnectionId, roomId);
+			CallClientMethod(message);
+		}
+
+		public void InitializeSingleGame()
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
+			var message = appService.InitializeSingleGame(Context.ConnectionId);
+			CallClientMethod(message);
+		}
+
+		public void StartSingleGame()
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
+			var message = appService.StartSingleGame(Context.ConnectionId);
+			CallClientMethod(message);
+		}
+
+		public void SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1} {2}", MethodBase.GetCurrentMethod().Name, panelAreaType, turnType);
+			var message = appService.SelectPanelArea(Context.ConnectionId, panelAreaType, turnType);
 			CallClientMethod(message);
 		}
 
