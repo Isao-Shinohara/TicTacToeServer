@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TicTacToeServer.Core;
+using TicTacToeServer.Entitys;
 using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Models;
@@ -20,17 +21,17 @@ namespace TicTacToeServer.Services
 
 		public void AddPlayer(string connectionId)
 		{
-			if (!signalRContext.SignalRItemSet.Any(item => item.ConnectionId == connectionId)) {
-				signalRContext.Update(new SignalRItem { ConnectionId = connectionId });
+			if (!signalRContext.PlayerSet.Any(v => v.ConnectionId == connectionId)) {
+				signalRContext.Update(new PlayerEntity(connectionId));
 				signalRContext.SaveChanges();
 			}
 		}
 
 		public void RemovePlayer(string connectionId)
 		{
-			SignalRItem signalRItem = signalRContext.SignalRItemSet.FirstOrDefault(item => item.ConnectionId == connectionId);
-			if (signalRItem != null) {
-				signalRContext.Remove(signalRItem);
+			var player = signalRContext.PlayerSet.FirstOrDefault(v => v.ConnectionId == connectionId);
+			if (player != null) {
+				signalRContext.Remove(player);
 				signalRContext.SaveChanges();
 			}
 		}

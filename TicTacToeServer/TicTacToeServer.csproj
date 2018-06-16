@@ -32,5 +32,6 @@
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
     <Folder Include="Core\" />
+    <Folder Include="Entitys\" />
   </ItemGroup>
 </Project>
