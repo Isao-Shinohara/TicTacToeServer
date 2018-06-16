@@ -36,35 +36,50 @@ namespace TicTacToeServer.Hubs
 		public void CreateRoom(int roomId)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var message = appService.CreateRoom(Context.ConnectionId, roomId);
+
+			var errorMessage = appService.CreateRoom(roomId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomId, errorMessage);
+
 			CallClientMethod(message);
 		}
 
 		public void JoinRoom(int roomId)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var message = appService.JoinRoom(Context.ConnectionId, roomId);
+
+			var errorMessage = appService.JoinRoom(roomId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomId, errorMessage);
+
 			CallClientMethod(message);
 		}
 
 		public void InitializeSingleGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var message = appService.InitializeSingleGame(Context.ConnectionId);
+
+			var turnType = appService.InitializeSingleGame();
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, turnType);
+
 			CallClientMethod(message);
 		}
 
 		public void StartSingleGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var message = appService.StartSingleGame(Context.ConnectionId);
+
+			appService.StartSingleGame();
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name);
+
 			CallClientMethod(message);
 		}
 
 		public void SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1} {2}", MethodBase.GetCurrentMethod().Name, panelAreaType, turnType);
-			var message = appService.SelectPanelArea(Context.ConnectionId, panelAreaType, turnType);
+
+			var resultType = appService.SelectPanelArea(panelAreaType, turnType);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, panelAreaType, resultType);
+
 			CallClientMethod(message);
 		}
 

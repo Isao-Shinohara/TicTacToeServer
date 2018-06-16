@@ -36,33 +36,29 @@ namespace TicTacToeServer.Services
 			}
 		}
 
-		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
+		public string CreateRoom(int roomId)
 		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			string message = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
-			return new SignalRClientMessage(connectionId, method, roomId, message);
+			var errorMessage = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
+			return errorMessage;
 		}
 
-		internal SignalRClientMessage JoinRoom(string connectionId, int roomId)
+		internal string JoinRoom(int roomId)
 		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			string message = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
-			return new SignalRClientMessage(connectionId, method, roomId, message);
+			string errorMessage = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
+			return errorMessage;
 		}
 
-		public SignalRClientMessage InitializeSingleGame(string connectionId)
+		public TurnType InitializeSingleGame()
 		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, TurnType._1stPlayer);
+			return TurnType._1stPlayer;
 		}
 
-		public SignalRClientMessage StartSingleGame(string connectionId)
+		public void StartSingleGame()
 		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method);
+			return;
 		}
 
-		public SignalRClientMessage SelectPanelArea(string connectionId, PanelAreaType panelAreaType, TurnType turnType)
+		public ResultType SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
 		{
 			signalRContext.Update(new PanelAreaModel(panelAreaType, turnType));
 			signalRContext.SaveChanges();
@@ -79,8 +75,7 @@ namespace TicTacToeServer.Services
 			if (isEnd) resultType = ResultType.Draw;
 			AppSignalRLogger.LogVerbose("[resultType '{0}']", resultType);
 
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, panelAreaType, resultType);
+			return resultType;
 		}
 
 		private bool IsClear(List<PanelAreaModel> list)
