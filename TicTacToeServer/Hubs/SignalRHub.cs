@@ -2,9 +2,8 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using TicTacToeServer.Core;
+using TicTacToeServer.Cores;
 using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Models;
 using TicTacToeServer.Services;
 
 namespace TicTacToeServer.Hubs
@@ -33,38 +32,43 @@ namespace TicTacToeServer.Hubs
 			return base.OnDisconnectedAsync(e);
 		}
 
-		public void CreateRoom(int roomId)
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var message = appService.CreateRoom(Context.ConnectionId, roomId);
-			CallClientMethod(message);
-		}
-
-		public void JoinRoom(int roomId)
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var message = appService.JoinRoom(Context.ConnectionId, roomId);
-			CallClientMethod(message);
-		}
-
 		public void InitializeSingleGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var message = appService.InitializeSingleGame(Context.ConnectionId);
+			var result = appService.InitializeSingleGame(Context.ConnectionId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void CreateRoom(int roomNumber)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
+			var result = appService.CreateRoom(Context.ConnectionId, roomNumber);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void JoinRoom(int roomNumber)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
+			var result = appService.JoinRoom(Context.ConnectionId, roomNumber);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
 			CallClientMethod(message);
 		}
 
 		public void StartSingleGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var message = appService.StartSingleGame(Context.ConnectionId);
+			appService.StartSingleGame();
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name);
 			CallClientMethod(message);
 		}
 
 		public void SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1} {2}", MethodBase.GetCurrentMethod().Name, panelAreaType, turnType);
-			var message = appService.SelectPanelArea(Context.ConnectionId, panelAreaType, turnType);
+			var resultType = appService.SelectPanelArea(panelAreaType, turnType);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, panelAreaType, resultType);
 			CallClientMethod(message);
 		}
 

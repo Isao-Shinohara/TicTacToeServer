@@ -32,5 +32,9 @@
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
     <Folder Include="Core\" />
+    <Folder Include="Entitys\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Infrastructures\SignalRItem.cs" />
   </ItemGroup>
 </Project>

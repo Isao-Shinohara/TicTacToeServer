@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using TicTacToeServer.Core;
-using TicTacToeServer.Hubs;
+using TicTacToeServer.Cores;
+using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Models;
 
 namespace TicTacToeServer.Services
 {
@@ -18,59 +16,97 @@ namespace TicTacToeServer.Services
 			signalRContext = context;
 		}
 
+		public PlayerEntity GetPlayer(string connectionId)
+		{
+			return signalRContext.PlayerSet.FirstOrDefault(x => x.ConnectionId == connectionId);
+		}
+
 		public void AddPlayer(string connectionId)
 		{
-			if (!signalRContext.SignalRItemSet.Any(item => item.ConnectionId == connectionId)) {
-				signalRContext.Update(new SignalRItem { ConnectionId = connectionId });
+			if (!signalRContext.PlayerSet.Any(v => v.ConnectionId == connectionId)) {
+				signalRContext.Update(new PlayerEntity(connectionId));
 				signalRContext.SaveChanges();
 			}
 		}
 
 		public void RemovePlayer(string connectionId)
 		{
-			SignalRItem signalRItem = signalRContext.SignalRItemSet.FirstOrDefault(item => item.ConnectionId == connectionId);
-			if (signalRItem != null) {
-				signalRContext.Remove(signalRItem);
+			var player = signalRContext.PlayerSet.FirstOrDefault(v => v.ConnectionId == connectionId);
+			if (player != null) {
+				var room = signalRContext.RoomSet.FirstOrDefault(x => x.Id == player.RoomId);
+				if(room != null){
+					signalRContext.Remove(room);
+				}
+
+				signalRContext.Remove(player);
 				signalRContext.SaveChanges();
 			}
 		}
 
-		public SignalRClientMessage CreateRoom(string connectionId, int roomId)
+		public (TurnType TurnType, string ErrorMessage) InitializeSingleGame(string connectionId)
 		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			string message = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
-			return new SignalRClientMessage(connectionId, method, roomId, message);
-		}
+			var player = GetPlayer(connectionId);
 
-		internal SignalRClientMessage JoinRoom(string connectionId, int roomId)
-		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			string message = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
-			return new SignalRClientMessage(connectionId, method, roomId, message);
-		}
-
-		public SignalRClientMessage InitializeSingleGame(string connectionId)
-		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, TurnType._1stPlayer);
-		}
-
-		public SignalRClientMessage StartSingleGame(string connectionId)
-		{
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method);
-		}
-
-		public SignalRClientMessage SelectPanelArea(string connectionId, PanelAreaType panelAreaType, TurnType turnType)
-		{
-			signalRContext.Update(new PanelAreaModel(panelAreaType, turnType));
+			var newRoom = new RoomEntity(RoomType.Single, player);
+			signalRContext.Update(newRoom);
 			signalRContext.SaveChanges();
 
-			var panelAreaModelList = signalRContext.PanelAreaModelSet.Where(x => x.TurnType == turnType).ToList();
+			player.SetRoomId(newRoom.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._1stPlayer, "");
+		}
+
+		public (TurnType TurnType, string ErrorMessage) CreateRoom(string connectionId, int roomNumber)
+		{
+			var player = GetPlayer(connectionId);
+
+			var room = signalRContext.RoomSet.FirstOrDefault(x => x.RoomNumber == roomNumber);
+			if(room != null){
+				return (TurnType._1stPlayer, ErrorMessage.ExistsSameRoomNumber);
+			}
+
+			var newRoom = new RoomEntity(roomNumber, RoomType.Multi, player);
+			signalRContext.Update(newRoom);
+			signalRContext.SaveChanges();
+
+			player.SetRoomId(newRoom.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._1stPlayer, "");
+		}
+
+		public (TurnType TurnType, string ErrorMessage) JoinRoom(string connectionId, int roomNumber)
+		{
+			var player = GetPlayer(connectionId);
+
+			var room = signalRContext.RoomSet.FirstOrDefault(x => x.RoomNumber == roomNumber);
+			if (room == null) {
+				return (TurnType._2ndPlayer, ErrorMessage.NotExistsRoomNumber);
+			}
+
+			room.Set2ndPlayer(player);
+			player.SetRoomId(room.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._2ndPlayer, "");
+		}
+
+		public void StartSingleGame()
+		{
+			return;
+		}
+
+		public ResultType SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
+		{
+			signalRContext.Update(new PanelAreaEntity(panelAreaType, turnType));
+			signalRContext.SaveChanges();
+
+			var panelAreaModelList = signalRContext.PanelAreaSet.Where(x => x.TurnType == turnType).ToList();
 			var isClear = IsClear(panelAreaModelList);
 			AppSignalRLogger.LogVerbose("[isClear '{0}']", isClear);
 
-			var isEnd = IsEnd(signalRContext.PanelAreaModelSet.ToList());
+			var isEnd = IsEnd(signalRContext.PanelAreaSet.ToList());
 			AppSignalRLogger.LogVerbose("[isEnd '{0}']", isClear);
 
 			var resultType = ResultType.None;
@@ -78,11 +114,10 @@ namespace TicTacToeServer.Services
 			if (isEnd) resultType = ResultType.Draw;
 			AppSignalRLogger.LogVerbose("[resultType '{0}']", resultType);
 
-			string method = string.Format("On{0}", MethodBase.GetCurrentMethod().Name);
-			return new SignalRClientMessage(connectionId, method, panelAreaType, resultType);
+			return resultType;
 		}
 
-		private bool IsClear(List<PanelAreaModel> list)
+		private bool IsClear(List<PanelAreaEntity> list)
 		{
 			var existsArea1 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area1);
 			var existsArea2 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area2);
@@ -119,7 +154,7 @@ namespace TicTacToeServer.Services
 			return false;
 		}
 
-		private bool IsEnd(List<PanelAreaModel> list)
+		private bool IsEnd(List<PanelAreaEntity> list)
 		{
 			return list.Count >= 9;
 		}

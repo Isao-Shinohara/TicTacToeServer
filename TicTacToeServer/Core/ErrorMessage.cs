@@ -1,4 +1,4 @@
-﻿namespace TicTacToeServer.Core
+﻿namespace TicTacToeServer.Cores
 {
 	public static class ErrorMessage
 	{

@@ -1,6 +1,11 @@
-﻿using System;
-namespace TicTacToeServer.Models
+﻿namespace TicTacToeServer.Cores
 {
+	public enum RoomType
+	{
+		Single,
+		Multi,
+	}
+
 	public enum TurnType
 	{
 		_1stPlayer,
@@ -26,12 +31,5 @@ namespace TicTacToeServer.Models
 		Area7,
 		Area8,
 		Area9,
-	}
-
-	public class AppModel
-	{
-		public AppModel()
-		{
-		}
 	}
 }
