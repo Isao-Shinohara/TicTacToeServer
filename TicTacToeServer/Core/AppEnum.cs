@@ -1,5 +1,4 @@
-﻿using System;
-namespace TicTacToeServer.Models
+﻿namespace TicTacToeServer.Cores
 {
 	public enum TurnType
 	{
@@ -26,12 +25,5 @@ namespace TicTacToeServer.Models
 		Area7,
 		Area8,
 		Area9,
-	}
-
-	public class AppModel
-	{
-		public AppModel()
-		{
-		}
 	}
 }

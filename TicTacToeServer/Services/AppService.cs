@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using TicTacToeServer.Core;
+using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
-using TicTacToeServer.Hubs;
 using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Models;
 
 namespace TicTacToeServer.Services
 {
@@ -60,14 +56,14 @@ namespace TicTacToeServer.Services
 
 		public ResultType SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
 		{
-			signalRContext.Update(new PanelAreaModel(panelAreaType, turnType));
+			signalRContext.Update(new PanelAreaEntity(panelAreaType, turnType));
 			signalRContext.SaveChanges();
 
-			var panelAreaModelList = signalRContext.PanelAreaModelSet.Where(x => x.TurnType == turnType).ToList();
+			var panelAreaModelList = signalRContext.PanelAreaSet.Where(x => x.TurnType == turnType).ToList();
 			var isClear = IsClear(panelAreaModelList);
 			AppSignalRLogger.LogVerbose("[isClear '{0}']", isClear);
 
-			var isEnd = IsEnd(signalRContext.PanelAreaModelSet.ToList());
+			var isEnd = IsEnd(signalRContext.PanelAreaSet.ToList());
 			AppSignalRLogger.LogVerbose("[isEnd '{0}']", isClear);
 
 			var resultType = ResultType.None;
@@ -78,7 +74,7 @@ namespace TicTacToeServer.Services
 			return resultType;
 		}
 
-		private bool IsClear(List<PanelAreaModel> list)
+		private bool IsClear(List<PanelAreaEntity> list)
 		{
 			var existsArea1 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area1);
 			var existsArea2 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area2);
@@ -115,7 +111,7 @@ namespace TicTacToeServer.Services
 			return false;
 		}
 
-		private bool IsEnd(List<PanelAreaModel> list)
+		private bool IsEnd(List<PanelAreaEntity> list)
 		{
 			return list.Count >= 9;
 		}

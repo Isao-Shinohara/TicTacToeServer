@@ -2,9 +2,8 @@
 
 namespace TicTacToeServer.Entitys
 {
-	public class PlayerEntity
+	public class PlayerEntity : Entity
 	{
-		public long Id { get; private set; }
 		public string ConnectionId { get; private set; }
 
 		public PlayerEntity(string connectionId)
