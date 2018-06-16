@@ -4,8 +4,8 @@ namespace TicTacToeServer.Entitys
 {
 	public class PanelAreaEntity : Entity
 	{
-		public PanelAreaType PanelAreaType { get; set; }
-		public TurnType TurnType { get; set; }
+		public PanelAreaType PanelAreaType { get; private set; }
+		public TurnType TurnType { get; private set; }
 
 		public PanelAreaEntity(PanelAreaType panelAreaType, TurnType turnType)
 		{

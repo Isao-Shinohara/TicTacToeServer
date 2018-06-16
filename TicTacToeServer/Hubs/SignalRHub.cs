@@ -32,27 +32,27 @@ namespace TicTacToeServer.Hubs
 			return base.OnDisconnectedAsync(e);
 		}
 
-		public void CreateRoom(int roomId)
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var errorMessage = appService.CreateRoom(roomId);
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomId, errorMessage);
-			CallClientMethod(message);
-		}
-
-		public void JoinRoom(int roomId)
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomId);
-			var errorMessage = appService.JoinRoom(roomId);
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomId, errorMessage);
-			CallClientMethod(message);
-		}
-
 		public void InitializeSingleGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var turnType = appService.InitializeSingleGame();
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, turnType);
+			var result = appService.InitializeSingleGame(Context.ConnectionId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void CreateRoom(int roomNumber)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
+			var result = appService.CreateRoom(Context.ConnectionId, roomNumber);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void JoinRoom(int roomNumber)
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
+			var result = appService.JoinRoom(Context.ConnectionId, roomNumber);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
 			CallClientMethod(message);
 		}
 

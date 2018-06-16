@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
@@ -15,6 +16,11 @@ namespace TicTacToeServer.Services
 			signalRContext = context;
 		}
 
+		public PlayerEntity GetPlayer(string connectionId)
+		{
+			return signalRContext.PlayerSet.FirstOrDefault(x => x.ConnectionId == connectionId);
+		}
+
 		public void AddPlayer(string connectionId)
 		{
 			if (!signalRContext.PlayerSet.Any(v => v.ConnectionId == connectionId)) {
@@ -27,26 +33,63 @@ namespace TicTacToeServer.Services
 		{
 			var player = signalRContext.PlayerSet.FirstOrDefault(v => v.ConnectionId == connectionId);
 			if (player != null) {
+				var room = signalRContext.RoomSet.FirstOrDefault(x => x.Id == player.RoomId);
+				if(room != null){
+					signalRContext.Remove(room);
+				}
+
 				signalRContext.Remove(player);
 				signalRContext.SaveChanges();
 			}
 		}
 
-		public string CreateRoom(int roomId)
+		public (TurnType TurnType, string ErrorMessage) InitializeSingleGame(string connectionId)
 		{
-			var errorMessage = roomId > 0 ? "" : ErrorMessage.ExistsSameRoomNumber;
-			return errorMessage;
+			var player = GetPlayer(connectionId);
+
+			var newRoom = new RoomEntity(RoomType.Single, player);
+			signalRContext.Update(newRoom);
+			signalRContext.SaveChanges();
+
+			player.SetRoomId(newRoom.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._1stPlayer, "");
 		}
 
-		internal string JoinRoom(int roomId)
+		public (TurnType TurnType, string ErrorMessage) CreateRoom(string connectionId, int roomNumber)
 		{
-			string errorMessage = roomId > 0 ? "" : ErrorMessage.NotExistsRoomNumber;
-			return errorMessage;
+			var player = GetPlayer(connectionId);
+
+			var room = signalRContext.RoomSet.FirstOrDefault(x => x.RoomNumber == roomNumber);
+			if(room != null){
+				return (TurnType._1stPlayer, ErrorMessage.ExistsSameRoomNumber);
+			}
+
+			var newRoom = new RoomEntity(roomNumber, RoomType.Multi, player);
+			signalRContext.Update(newRoom);
+			signalRContext.SaveChanges();
+
+			player.SetRoomId(newRoom.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._1stPlayer, "");
 		}
 
-		public TurnType InitializeSingleGame()
+		public (TurnType TurnType, string ErrorMessage) JoinRoom(string connectionId, int roomNumber)
 		{
-			return TurnType._1stPlayer;
+			var player = GetPlayer(connectionId);
+
+			var room = signalRContext.RoomSet.FirstOrDefault(x => x.RoomNumber == roomNumber);
+			if (room == null) {
+				return (TurnType._2ndPlayer, ErrorMessage.NotExistsRoomNumber);
+			}
+
+			room.Set2ndPlayer(player);
+			player.SetRoomId(room.Id);
+			signalRContext.SaveChanges();
+
+			return (TurnType._2ndPlayer, "");
 		}
 
 		public void StartSingleGame()

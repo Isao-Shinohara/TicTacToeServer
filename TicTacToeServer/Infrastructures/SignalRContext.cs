@@ -10,6 +10,7 @@ namespace TicTacToeServer.Infrastructures
 		}
 
 		public DbSet<PlayerEntity> PlayerSet { get; set; }
+		public DbSet<RoomEntity> RoomSet { get; set; }
 		public DbSet<PanelAreaEntity> PanelAreaSet { get; set; }
 	}
 }

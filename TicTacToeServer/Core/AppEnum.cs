@@ -1,5 +1,11 @@
 ﻿namespace TicTacToeServer.Cores
 {
+	public enum RoomType
+	{
+		Single,
+		Multi,
+	}
+
 	public enum TurnType
 	{
 		_1stPlayer,
