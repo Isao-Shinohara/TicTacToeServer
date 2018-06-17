@@ -33,6 +33,7 @@
     <Folder Include="Services\" />
     <Folder Include="Core\" />
     <Folder Include="Entitys\" />
+    <Folder Include="Repositorys\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Infrastructures\SignalRItem.cs" />

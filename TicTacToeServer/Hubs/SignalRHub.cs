@@ -64,11 +64,12 @@ namespace TicTacToeServer.Hubs
 			CallClientMethod(message);
 		}
 
-		public void SelectPanelArea(PanelAreaType panelAreaType, TurnType turnType)
+		public void SelectPanelArea(PanelAreaType panelAreaType)
 		{
-			AppSignalRLogger.LogVerbose("[Called '{0}'] {1} {2}", MethodBase.GetCurrentMethod().Name, panelAreaType, turnType);
-			var resultType = appService.SelectPanelArea(panelAreaType, turnType);
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, panelAreaType, resultType);
+			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, panelAreaType);
+			var result = appService.SelectPanelArea(Context.ConnectionId, panelAreaType);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, panelAreaType, result._1stPlayerResult, result._2ndPlayerResult);
+			AppSignalRLogger.LogVerbose("[SelectPanelArea Result] {0} {1}",result._1stPlayerResult, result._2ndPlayerResult);
 			CallClientMethod(message);
 		}
 

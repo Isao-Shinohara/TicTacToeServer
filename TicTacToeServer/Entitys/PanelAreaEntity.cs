@@ -6,11 +6,17 @@ namespace TicTacToeServer.Entitys
 	{
 		public PanelAreaType PanelAreaType { get; private set; }
 		public TurnType TurnType { get; private set; }
+		public bool Selected { get; private set; } = false;
 
-		public PanelAreaEntity(PanelAreaType panelAreaType, TurnType turnType)
+		public PanelAreaEntity(PanelAreaType panelAreaType)
 		{
 			PanelAreaType = panelAreaType;
+		}
+
+		public void SetTurnType(TurnType turnType)
+		{
 			TurnType = turnType;
+			Selected = true;
 		}
 	}
 }
