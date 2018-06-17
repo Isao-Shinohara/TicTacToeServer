@@ -12,7 +12,7 @@ namespace TicTacToeServer.Repositorys
 		{
 		}
 
-		public RoomEntity GetByRoomId(long roomId)
+		public RoomEntity GetByRoomId(int roomId)
 		{
 			return signalRContext.RoomSet.FirstOrDefault(x => x.Id == roomId);
 		}

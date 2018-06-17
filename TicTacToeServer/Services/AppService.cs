@@ -49,14 +49,17 @@ namespace TicTacToeServer.Services
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			var newRoom = roomRepository.Create(RoomType.Single, player);
-
 			roomRepository.Save();
+
 			player.SetRoomId(newRoom.Id);
+			var _2ndPlayer = playerRepository.Create();
+			_2ndPlayer.SetRoomId(newRoom.Id);
 			playerRepository.Save();
 
-			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", newRoom.Id);
-			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", newRoom.PanelAreaList.Count);
-			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", signalRContext.PanelAreaSet.Count());
+			newRoom.Set2ndPlayer(_2ndPlayer);
+			roomRepository.Save();
+
+			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", newRoom.Id, newRoom._1stPlayer.ConnectionId, newRoom._2ndPlayer.ConnectionId, newRoom.PanelAreaList.Count);
 
 			return (TurnType._1stPlayer, "");
 		}
@@ -106,13 +109,13 @@ namespace TicTacToeServer.Services
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			var room = roomRepository.GetByRoomId(player.RoomId);
-
-			AppSignalRLogger.LogVerbose("[RoomSet] {0}", signalRContext.PanelAreaSet.Count());
-			AppSignalRLogger.LogVerbose("[RoomSet] {0}", room.Id);
-			AppSignalRLogger.LogVerbose("[RoomSet] {0}", room.PanelAreaList == null);
+			var panelAreaList = panelAreaRepository.GetByRoomId(room.Id);
 
 			room.SelectPanelArea(player, panelAreaType);
 			roomRepository.Save();
+
+			playerRepository.GetById(room._2ndPlayerId);
+			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", room.Id, room._1stPlayer.ConnectionId, room._2ndPlayer.ConnectionId, room.PanelAreaList.Count);
 
 			return (room._1stPlayerResult, room._2ndPlayerResult);
 		}

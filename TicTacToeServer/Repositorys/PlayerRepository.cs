@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
 
@@ -10,9 +11,21 @@ namespace TicTacToeServer.Repositorys
 		{
 		}
 
+		public PlayerEntity GetById(int id)
+		{
+			return signalRContext.PlayerSet.FirstOrDefault(x => x.Id == id);
+		}
+
 		public PlayerEntity GetByConnectionId(string connectionId)
 		{
 			return signalRContext.PlayerSet.FirstOrDefault(x => x.ConnectionId == connectionId);
+		}
+
+		public PlayerEntity Create()
+		{
+			var player = new PlayerEntity();
+			signalRContext.Update(player);
+			return player;
 		}
 
 		public PlayerEntity Create(string connectionId)

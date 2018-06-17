@@ -12,5 +12,12 @@ namespace TicTacToeServer.Infrastructures
 		public DbSet<PlayerEntity> PlayerSet { get; set; }
 		public DbSet<RoomEntity> RoomSet { get; set; }
 		public DbSet<PanelAreaEntity> PanelAreaSet { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<PanelAreaEntity>()
+			            .HasOne(p => p.RoomEntity)
+			            .WithMany(b => b.PanelAreaList);
+		}
 	}
 }

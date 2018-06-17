@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using TicTacToeServer.Cores;
 
@@ -9,8 +10,15 @@ namespace TicTacToeServer.Entitys
 		public int RoomNumber { get; private set; }
 		public RoomType RoomType { get; private set; }
 		public TurnType NowTurnType { get; private set; }
+
+		public int _1stPlayerId { get; set; }
+		[ForeignKey("_1stPlayerId")]
 		public PlayerEntity _1stPlayer { get; private set; }
+
+		public int _2ndPlayerId { get; set; }
+		[ForeignKey("_2ndPlayerId")]
 		public PlayerEntity _2ndPlayer { get; private set; }
+
 		public List<PanelAreaEntity> PanelAreaList { get; private set; }
 
 		public RoomEntity()
