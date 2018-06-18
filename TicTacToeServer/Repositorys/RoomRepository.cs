@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
@@ -14,7 +14,8 @@ namespace TicTacToeServer.Repositorys
 
 		public RoomEntity GetByRoomId(int roomId)
 		{
-			return signalRContext.RoomSet.FirstOrDefault(x => x.Id == roomId);
+			return signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
+				                 .FirstOrDefault(x => x.Id == roomId);
 		}
 
 		public RoomEntity Create(RoomType roomType, PlayerEntity player)
@@ -33,7 +34,8 @@ namespace TicTacToeServer.Repositorys
 
 		public RoomEntity GetByRoomNumber(int roomNumber)
 		{
-			return signalRContext.RoomSet.FirstOrDefault(x => x.RoomNumber == roomNumber);
+			return signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
+				                 .FirstOrDefault(x => x.RoomNumber == roomNumber);
 		}
 	}
 }
