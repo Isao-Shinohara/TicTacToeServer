@@ -161,8 +161,6 @@ namespace TicTacToeServer.Entitys
 
 		private ResultType GetResult(TurnType turnType)
 		{
-			if (!IsClear) return ResultType.None;
-
 			var list = PanelAreaList.Where(x => x.TurnType == TurnType._1stPlayer).ToList();
 			var isClear = isClearWithPanelAreaList(list);
 			if(isClear){
@@ -183,7 +181,11 @@ namespace TicTacToeServer.Entitys
 				}
 			}
 
-			return ResultType.Draw;
+			if(IsEnd){
+				return ResultType.Draw;
+			}
+
+			return ResultType.None;
 		}
 
 		private List<PanelAreaEntity> GetInitialPanelArea()
