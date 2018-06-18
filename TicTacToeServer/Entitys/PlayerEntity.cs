@@ -3,7 +3,7 @@
 	public class PlayerEntity : Entity
 	{
 		public string ConnectionId { get; private set; }
-		public long RoomId { get; private set; }
+		public int RoomId { get; private set; }
 
 		public PlayerEntity()
 		{
@@ -14,7 +14,7 @@
 			ConnectionId = connectionId;
 		}
 
-		public void SetRoomId(long roomId)
+		public void SetRoomId(int roomId)
 		{
 			RoomId = roomId;
 		}
