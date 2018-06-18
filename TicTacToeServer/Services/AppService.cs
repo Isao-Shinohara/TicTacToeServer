@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
@@ -105,7 +106,7 @@ namespace TicTacToeServer.Services
 			return;
 		}
 
-		public (ResultType _1stPlayerResult, ResultType _2ndPlayerResult) SelectPanelArea(string connectionId, PanelAreaType panelAreaType)
+		public (List<string> ConnectionIds, RoomEntity Room) SelectPanelArea(string connectionId, PanelAreaType panelAreaType)
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			var room = roomRepository.GetByRoomId(player.RoomId);
@@ -115,9 +116,28 @@ namespace TicTacToeServer.Services
 			roomRepository.Save();
 
 			playerRepository.GetById(room._2ndPlayerId);
-			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", room.Id, room._1stPlayer.ConnectionId, room._2ndPlayer.ConnectionId, room.PanelAreaList.Count);
 
-			return (room._1stPlayerResult, room._2ndPlayerResult);
+			List<string> connectionIds = new List<string>() { room._1stPlayer.ConnectionId };
+			if (room.RoomType == RoomType.Multi) connectionIds.Add(room._2ndPlayer.ConnectionId);
+
+			room.NextTurn();
+			roomRepository.Save();
+
+			return (connectionIds, room);
+		}
+
+		public (RoomEntity Room, PanelAreaType SelectedPanelAreaType) SelectPanelAreaByAI(RoomEntity room)
+		{
+			var panelAreaType = room.SelectPanelAreaByAI();
+			roomRepository.Save();
+
+			playerRepository.GetById(room._2ndPlayerId);
+			var panelAreaList = panelAreaRepository.GetByRoomId(room.Id);
+
+			room.NextTurn();
+			roomRepository.Save();
+
+			return (room, panelAreaType);
 		}
 	}
 }
