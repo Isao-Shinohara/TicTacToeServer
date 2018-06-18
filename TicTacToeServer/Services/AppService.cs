@@ -60,8 +60,6 @@ namespace TicTacToeServer.Services
 			newRoom.Set2ndPlayer(_2ndPlayer);
 			roomRepository.Save();
 
-			AppSignalRLogger.LogVerbose("[InitializeSingleGame] {0}", newRoom.Id, newRoom._1stPlayer.ConnectionId, newRoom._2ndPlayer.ConnectionId, newRoom.PanelAreaList.Count);
-
 			return (TurnType._1stPlayer, "");
 		}
 
@@ -110,18 +108,13 @@ namespace TicTacToeServer.Services
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			var room = roomRepository.GetByRoomId(player.RoomId);
-			var panelAreaList = panelAreaRepository.GetByRoomId(room.Id);
 
 			room.SelectPanelArea(player, panelAreaType);
+			room.NextTurn();
 			roomRepository.Save();
-
-			playerRepository.GetById(room._2ndPlayerId);
 
 			List<string> connectionIds = new List<string>() { room._1stPlayer.ConnectionId };
 			if (room.RoomType == RoomType.Multi) connectionIds.Add(room._2ndPlayer.ConnectionId);
-
-			room.NextTurn();
-			roomRepository.Save();
 
 			return (connectionIds, room);
 		}
@@ -129,11 +122,6 @@ namespace TicTacToeServer.Services
 		public (RoomEntity Room, PanelAreaType SelectedPanelAreaType) SelectPanelAreaByAI(RoomEntity room)
 		{
 			var panelAreaType = room.SelectPanelAreaByAI();
-			roomRepository.Save();
-
-			playerRepository.GetById(room._2ndPlayerId);
-			var panelAreaList = panelAreaRepository.GetByRoomId(room.Id);
-
 			room.NextTurn();
 			roomRepository.Save();
 
