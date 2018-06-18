@@ -33,14 +33,6 @@ namespace TicTacToeServer.Hubs
 			return base.OnDisconnectedAsync(e);
 		}
 
-		public void InitializeSingleGame()
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var result = appService.InitializeSingleGame(Context.ConnectionId);
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
-			CallClientMethod(message);
-		}
-
 		public void CreateRoom(int roomNumber)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
@@ -57,10 +49,18 @@ namespace TicTacToeServer.Hubs
 			CallClientMethod(message);
 		}
 
-		public void StartSingleGame()
+		public void InitializeGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			appService.StartSingleGame();
+			var result = appService.InitializeGame(Context.ConnectionId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void StartGame()
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
+			appService.StartGame();
 			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name);
 			CallClientMethod(message);
 		}

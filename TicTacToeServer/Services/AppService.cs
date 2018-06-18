@@ -46,23 +46,6 @@ namespace TicTacToeServer.Services
 			}
 		}
 
-		public (TurnType TurnType, string ErrorMessage) InitializeSingleGame(string connectionId)
-		{
-			var player = playerRepository.GetByConnectionId(connectionId);
-			var newRoom = roomRepository.Create(RoomType.Single, player);
-			roomRepository.Save();
-
-			player.SetRoomId(newRoom.Id);
-			var _2ndPlayer = playerRepository.Create();
-			_2ndPlayer.SetRoomId(newRoom.Id);
-			playerRepository.Save();
-
-			newRoom.Set2ndPlayer(_2ndPlayer);
-			roomRepository.Save();
-
-			return (TurnType._1stPlayer, "");
-		}
-
 		public (TurnType TurnType, string ErrorMessage) CreateRoom(string connectionId, int roomNumber)
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
@@ -99,7 +82,24 @@ namespace TicTacToeServer.Services
 			return (TurnType._2ndPlayer, "");
 		}
 
-		public void StartSingleGame()
+		public (TurnType TurnType, string ErrorMessage) InitializeGame(string connectionId)
+		{
+			var player = playerRepository.GetByConnectionId(connectionId);
+			var newRoom = roomRepository.Create(RoomType.Single, player);
+			roomRepository.Save();
+
+			player.SetRoomId(newRoom.Id);
+			var _2ndPlayer = playerRepository.Create();
+			_2ndPlayer.SetRoomId(newRoom.Id);
+			playerRepository.Save();
+
+			newRoom.Set2ndPlayer(_2ndPlayer);
+			roomRepository.Save();
+
+			return (TurnType._1stPlayer, "");
+		}
+
+		public void StartGame()
 		{
 			return;
 		}
