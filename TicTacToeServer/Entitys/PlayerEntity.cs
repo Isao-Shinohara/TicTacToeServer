@@ -14,6 +14,13 @@
 			ConnectionId = connectionId;
 		}
 
+		public bool IsAI
+		{
+			get {
+				return ConnectionId != "";
+			}
+		}
+
 		public void SetRoomId(int roomId)
 		{
 			RoomId = roomId;

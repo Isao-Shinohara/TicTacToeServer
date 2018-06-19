@@ -14,8 +14,11 @@ namespace TicTacToeServer.Repositorys
 
 		public RoomEntity GetByRoomId(int roomId)
 		{
-			return signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
-				                 .FirstOrDefault(x => x.Id == roomId);
+			var room = signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
+								 .FirstOrDefault(x => x.Id == roomId);
+			if (room != null) return room;
+
+			return signalRContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.Id == roomId);
 		}
 
 		public RoomEntity Create(RoomType roomType, PlayerEntity player)

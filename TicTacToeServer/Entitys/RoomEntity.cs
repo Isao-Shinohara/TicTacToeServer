@@ -41,6 +41,27 @@ namespace TicTacToeServer.Entitys
 			PanelAreaList = GetInitialPanelArea();
 		}
 
+		public bool IsSingle
+		{
+			get {
+				return RoomType == RoomType.Single;
+			}
+		}
+
+		public bool IsMulti
+		{
+			get {
+				return RoomType == RoomType.Multi;
+			}
+		}
+
+		public bool Exsists2ndPlayer
+		{
+			get {
+				return _2ndPlayer != null;
+			}
+		}
+
 		public void Set2ndPlayer(PlayerEntity player)
 		{
 			_2ndPlayer = player;

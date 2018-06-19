@@ -47,6 +47,19 @@ namespace TicTacToeServer.Hubs
 			var result = appService.JoinRoom(Context.ConnectionId, roomNumber);
 			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
 			CallClientMethod(message);
+
+			if(result.ErrorMessage != ""){
+				AppSignalRLogger.LogVerbose("[JoinRoom ErrorMessage] {0}", result.ErrorMessage);
+				return;
+			}
+
+			var room = appService.GetRoomByConnectionId(Context.ConnectionId);
+			var initMessage = SignalRClientMessage.Create(room._1stPlayer.ConnectionId, "InitializeGame", TurnType._1stPlayer, "");
+			CallClientMethod(initMessage);
+
+			var initResult = appService.GetRoomByConnectionId(Context.ConnectionId);
+			initMessage = SignalRClientMessage.Create(room._2ndPlayer.ConnectionId, "InitializeGame", TurnType._2ndPlayer, "");
+			CallClientMethod(initMessage);
 		}
 
 		public void InitializeGame()

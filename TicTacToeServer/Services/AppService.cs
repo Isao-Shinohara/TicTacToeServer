@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
@@ -99,6 +100,12 @@ namespace TicTacToeServer.Services
 			return (TurnType._1stPlayer, "");
 		}
 
+		public RoomEntity GetRoomByConnectionId(string connectionId)
+		{
+			var player = playerRepository.GetByConnectionId(connectionId);
+			return roomRepository.GetByRoomId(player.RoomId);
+		}
+
 		public void StartGame()
 		{
 			return;
@@ -114,7 +121,7 @@ namespace TicTacToeServer.Services
 			roomRepository.Save();
 
 			List<string> connectionIds = new List<string>() { room._1stPlayer.ConnectionId };
-			if (room.RoomType == RoomType.Multi) connectionIds.Add(room._2ndPlayer.ConnectionId);
+			if (room.IsMulti && room.Exsists2ndPlayer) connectionIds.Add(room._2ndPlayer.ConnectionId);
 
 			return (connectionIds, room);
 		}
