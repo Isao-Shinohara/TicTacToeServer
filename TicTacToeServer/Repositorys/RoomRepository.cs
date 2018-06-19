@@ -21,6 +21,15 @@ namespace TicTacToeServer.Repositorys
 			return signalRContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.Id == roomId);
 		}
 
+		public RoomEntity GetByRoomNumber(int roomNumber)
+		{
+			var room = signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
+								 .FirstOrDefault(x => x.RoomNumber == roomNumber);
+			if (room != null) return room;
+
+			return signalRContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.RoomNumber == roomNumber);
+		}
+
 		public RoomEntity Create(RoomType roomType, PlayerEntity player)
 		{
 			var room = new RoomEntity(roomType, player);
@@ -33,12 +42,6 @@ namespace TicTacToeServer.Repositorys
 			var room = new RoomEntity(roomNumber, roomType, player);
 			signalRContext.Update(room);
 			return room;
-		}
-
-		public RoomEntity GetByRoomNumber(int roomNumber)
-		{
-			return signalRContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
-				                 .FirstOrDefault(x => x.RoomNumber == roomNumber);
 		}
 	}
 }
