@@ -3,9 +3,9 @@ using TicTacToeServer.Entitys;
 
 namespace TicTacToeServer.Infrastructures
 {
-	public class SignalRContext : DbContext
+	public class EFContext : DbContext
 	{
-		public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
+		public EFContext(DbContextOptions<EFContext> options) : base(options)
 		{
 		}
 

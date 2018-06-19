@@ -5,15 +5,15 @@ using TicTacToeServer.Infrastructures;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PanelAreaRepository : Repository<PanelAreaEntity>
+	public class PanelAreaRepository : EFRepository<PanelAreaEntity>
 	{
-		public PanelAreaRepository(SignalRContext signalRContext) : base(signalRContext)
+		public PanelAreaRepository(EFContext efContext) : base(efContext)
 		{
 		}
 
 		public List<PanelAreaEntity> GetByRoomId(int roomId)
 		{
-			return signalRContext.PanelAreaSet.Where(x => x.RoomEntity.Id == roomId).ToList();
+			return efContext.PanelAreaSet.Where(x => x.RoomEntity.Id == roomId).ToList();
 		}
 	}
 }

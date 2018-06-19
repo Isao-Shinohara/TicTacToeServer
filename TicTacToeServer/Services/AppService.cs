@@ -10,14 +10,14 @@ namespace TicTacToeServer.Services
 {
 	public class AppService
 	{
-		SignalRContext signalRContext;
+		EFContext efContext;
 		PlayerRepository playerRepository;
 		RoomRepository roomRepository;
 		PanelAreaRepository panelAreaRepository;
 
-		public AppService(SignalRContext context)
+		public AppService(EFContext context)
 		{
-			signalRContext = context;
+			efContext = context;
 			playerRepository = new PlayerRepository(context);
 			roomRepository = new RoomRepository(context);
 			panelAreaRepository = new PanelAreaRepository(context);

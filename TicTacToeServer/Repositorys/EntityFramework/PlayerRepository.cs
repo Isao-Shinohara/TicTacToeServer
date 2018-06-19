@@ -5,33 +5,33 @@ using TicTacToeServer.Infrastructures;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PlayerRepository : Repository<PlayerEntity>
+	public class PlayerRepository : EFRepository<PlayerEntity>
 	{
-		public PlayerRepository(SignalRContext signalRContext) : base(signalRContext)
+		public PlayerRepository(EFContext efContext) : base(efContext)
 		{
 		}
 
 		public PlayerEntity GetById(int id)
 		{
-			return signalRContext.PlayerSet.FirstOrDefault(x => x.Id == id);
+			return efContext.PlayerSet.FirstOrDefault(x => x.Id == id);
 		}
 
 		public PlayerEntity GetByConnectionId(string connectionId)
 		{
-			return signalRContext.PlayerSet.FirstOrDefault(x => x.ConnectionId == connectionId);
+			return efContext.PlayerSet.FirstOrDefault(x => x.ConnectionId == connectionId);
 		}
 
 		public PlayerEntity Create()
 		{
 			var player = new PlayerEntity();
-			signalRContext.Update(player);
+			efContext.Update(player);
 			return player;
 		}
 
 		public PlayerEntity Create(string connectionId)
 		{
 			var player = new PlayerEntity(connectionId);
-			signalRContext.Update(player);
+			efContext.Update(player);
 			return player;
 		}
 	}

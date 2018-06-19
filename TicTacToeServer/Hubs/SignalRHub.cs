@@ -13,7 +13,7 @@ namespace TicTacToeServer.Hubs
 	{
 		AppService appService;
 
-		public SignalRHub(SignalRContext context)
+		public SignalRHub(EFContext context)
 		{
 			AppSignalRLogger.Level = AppSignalRLogger.Loglevels.Verbose;
 			appService = new AppService(context);
