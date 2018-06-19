@@ -33,14 +33,6 @@ namespace TicTacToeServer.Hubs
 			return base.OnDisconnectedAsync(e);
 		}
 
-		public void InitializeSingleGame()
-		{
-			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			var result = appService.InitializeSingleGame(Context.ConnectionId);
-			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
-			CallClientMethod(message);
-		}
-
 		public void CreateRoom(int roomNumber)
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, roomNumber);
@@ -55,12 +47,33 @@ namespace TicTacToeServer.Hubs
 			var result = appService.JoinRoom(Context.ConnectionId, roomNumber);
 			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, roomNumber, result.TurnType, result.ErrorMessage);
 			CallClientMethod(message);
+
+			if(result.ErrorMessage != ""){
+				AppSignalRLogger.LogVerbose("[JoinRoom ErrorMessage] {0}", result.ErrorMessage);
+				return;
+			}
+
+			var room = appService.GetRoomByConnectionId(Context.ConnectionId);
+			var initMessage = SignalRClientMessage.Create(room._1stPlayer.ConnectionId, "InitializeGame", TurnType._1stPlayer, "");
+			CallClientMethod(initMessage);
+
+			var initResult = appService.GetRoomByConnectionId(Context.ConnectionId);
+			initMessage = SignalRClientMessage.Create(room._2ndPlayer.ConnectionId, "InitializeGame", TurnType._2ndPlayer, "");
+			CallClientMethod(initMessage);
 		}
 
-		public void StartSingleGame()
+		public void InitializeGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
-			appService.StartSingleGame();
+			var result = appService.InitializeGame(Context.ConnectionId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, result.TurnType, result.ErrorMessage);
+			CallClientMethod(message);
+		}
+
+		public void StartGame()
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
+			appService.StartGame();
 			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name);
 			CallClientMethod(message);
 		}
