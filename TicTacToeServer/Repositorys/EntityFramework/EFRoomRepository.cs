@@ -7,9 +7,9 @@ using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys.EntityFramework
 {
-	public class RoomRepository : EFRepository<RoomEntity>, IRoomRepository
+	public class EFRoomRepository : EFRepository<RoomEntity>, IRoomRepository
 	{
-		public RoomRepository(EFContext efContext) : base(efContext)
+		public EFRoomRepository(EFContext efContext) : base(efContext)
 		{
 		}
 

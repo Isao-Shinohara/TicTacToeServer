@@ -13,16 +13,16 @@ namespace TicTacToeServer.Services
 	public class AppService
 	{
 		EFContext efContext;
-		PlayerRepository playerRepository;
-		RoomRepository roomRepository;
-		PanelAreaRepository panelAreaRepository;
+		EFPlayerRepository playerRepository;
+		EFRoomRepository roomRepository;
+		EFPanelAreaRepository panelAreaRepository;
 
 		public AppService(EFContext context, IDistributedCache cache)
 		{
 			efContext = context;
-			playerRepository = new PlayerRepository(context);
-			roomRepository = new RoomRepository(context);
-			panelAreaRepository = new PanelAreaRepository(context);
+			playerRepository = new EFPlayerRepository(context);
+			roomRepository = new EFRoomRepository(context);
+			panelAreaRepository = new EFPanelAreaRepository(context);
 		}
 
 		public void AddPlayer(string connectionId)

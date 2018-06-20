@@ -6,9 +6,9 @@ using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys.Redis
 {
-	public class RoomRepository : RedisRepository<RoomEntity>, IRoomRepository
+	public class RedisRoomRepository : RedisRepository<RoomEntity>, IRoomRepository
 	{
-		public RoomRepository(IDistributedCache cache) : base(cache)
+		public RedisRoomRepository(IDistributedCache cache) : base(cache)
 		{
 		}
 

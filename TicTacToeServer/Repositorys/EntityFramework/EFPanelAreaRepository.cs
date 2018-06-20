@@ -6,9 +6,9 @@ using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PanelAreaRepository : EFRepository<PanelAreaEntity>, IPanelAreaRepository
+	public class EFPanelAreaRepository : EFRepository<PanelAreaEntity>, IPanelAreaRepository
 	{
-		public PanelAreaRepository(EFContext efContext) : base(efContext)
+		public EFPanelAreaRepository(EFContext efContext) : base(efContext)
 		{
 		}
 

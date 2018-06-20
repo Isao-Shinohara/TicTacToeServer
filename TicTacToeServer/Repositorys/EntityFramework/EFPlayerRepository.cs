@@ -6,9 +6,9 @@ using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PlayerRepository : EFRepository<PlayerEntity>, IPlayerRepository
+	public class EFPlayerRepository : EFRepository<PlayerEntity>, IPlayerRepository
 	{
-		public PlayerRepository(EFContext efContext) : base(efContext)
+		public EFPlayerRepository(EFContext efContext) : base(efContext)
 		{
 		}
 
