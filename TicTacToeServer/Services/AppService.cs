@@ -7,6 +7,7 @@ using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Repositorys;
 using TicTacToeServer.Repositorys.EntityFramework;
+using TicTacToeServer.Repositorys.Redis;
 
 namespace TicTacToeServer.Services
 {

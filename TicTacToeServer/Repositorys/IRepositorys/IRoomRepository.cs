@@ -3,7 +3,7 @@ using TicTacToeServer.Entitys;
 
 namespace TicTacToeServer.Repositorys.IRepositorys
 {
-	public interface IRoomRepository
+	public interface IRoomRepository : IRepository<RoomEntity>
 	{
 		RoomEntity GetByRoomId(int roomId);
 		RoomEntity GetByRoomNumber(int roomNumber);

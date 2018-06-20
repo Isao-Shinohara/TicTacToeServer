@@ -2,7 +2,7 @@
 
 namespace TicTacToeServer.Repositorys.IRepositorys
 {
-	public interface IPlayerRepository
+	public interface IPlayerRepository : IRepository<PlayerEntity>
 	{
 		PlayerEntity GetById(int id);
 		PlayerEntity GetByConnectionId(string connectionId);

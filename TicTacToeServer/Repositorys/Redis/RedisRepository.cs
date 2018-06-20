@@ -14,6 +14,14 @@ namespace TicTacToeServer.Repositorys.Redis
 			this.cache = cache;
 		}
 
+		public void Save()
+		{
+		}
+
+		public void Remove(T entiry)
+		{
+		}
+
 		//public string Get()
 		//{
 		//	var cacheKey = "TheTime";

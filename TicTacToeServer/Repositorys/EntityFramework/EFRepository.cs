@@ -1,5 +1,6 @@
 ﻿using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys
 {
