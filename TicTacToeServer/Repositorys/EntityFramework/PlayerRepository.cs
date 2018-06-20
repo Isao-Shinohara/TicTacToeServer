@@ -2,10 +2,11 @@
 using System.Linq;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PlayerRepository : EFRepository<PlayerEntity>
+	public class PlayerRepository : EFRepository<PlayerEntity>, IPlayerRepository
 	{
 		public PlayerRepository(EFContext efContext) : base(efContext)
 		{

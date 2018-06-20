@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Repositorys;
+using TicTacToeServer.Repositorys.EntityFramework;
 
 namespace TicTacToeServer.Services
 {
@@ -15,7 +17,7 @@ namespace TicTacToeServer.Services
 		RoomRepository roomRepository;
 		PanelAreaRepository panelAreaRepository;
 
-		public AppService(EFContext context)
+		public AppService(EFContext context, IDistributedCache cache)
 		{
 			efContext = context;
 			playerRepository = new PlayerRepository(context);

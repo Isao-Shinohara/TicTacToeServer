@@ -39,6 +39,12 @@ namespace TicTacToeServer
 				});
 			});
 
+			services.AddDistributedRedisCache(option =>
+			{
+				option.Configuration = "127.0.0.1";
+				option.InstanceName = "master";
+			});
+
 			// set extensions to default resolver.
 			MessagePack.Resolvers.CompositeResolver.RegisterAndSetAsDefault(
 				// enable extension packages first

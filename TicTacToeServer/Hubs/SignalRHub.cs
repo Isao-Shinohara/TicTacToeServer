@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Services;
@@ -13,10 +14,10 @@ namespace TicTacToeServer.Hubs
 	{
 		AppService appService;
 
-		public SignalRHub(EFContext context)
+		public SignalRHub(EFContext efContext, IDistributedCache cache)
 		{
 			AppSignalRLogger.Level = AppSignalRLogger.Loglevels.Verbose;
-			appService = new AppService(context);
+			appService = new AppService(efContext, cache);
 		}
 
 		public override Task OnConnectedAsync()

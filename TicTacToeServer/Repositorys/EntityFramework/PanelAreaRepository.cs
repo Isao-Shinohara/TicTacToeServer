@@ -2,10 +2,11 @@
 using System.Linq;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Repositorys
 {
-	public class PanelAreaRepository : EFRepository<PanelAreaEntity>
+	public class PanelAreaRepository : EFRepository<PanelAreaEntity>, IPanelAreaRepository
 	{
 		public PanelAreaRepository(EFContext efContext) : base(efContext)
 		{

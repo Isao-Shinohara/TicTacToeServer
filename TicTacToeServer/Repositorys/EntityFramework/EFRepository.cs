@@ -5,7 +5,7 @@ namespace TicTacToeServer.Repositorys
 {
 	public class EFRepository<T> where T : Entity
 	{
-		public EFContext efContext;
+		protected readonly EFContext efContext;
 
 		public EFRepository(EFContext efContext)
 		{
