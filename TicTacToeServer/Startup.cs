@@ -41,7 +41,7 @@ namespace TicTacToeServer
 
 			services.AddDistributedRedisCache(option =>
 			{
-				option.Configuration = "127.0.0.1";
+				option.Configuration = Configuration["Redis:Host"];
 				option.InstanceName = "master";
 			});
 

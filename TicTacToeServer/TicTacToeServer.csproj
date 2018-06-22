@@ -45,4 +45,10 @@
     <Compile Remove="Infrastructures\SignalRItem.cs" />
     <Compile Remove="Infrastructures\RedisContext.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Local.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.Local.json" />
+  </ItemGroup>
 </Project>
