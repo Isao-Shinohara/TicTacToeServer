@@ -9,7 +9,7 @@ RUN dotnet restore
 # copy everything else and build app
 COPY TicTacToeServer/. ./TicTacToeServer/
 WORKDIR /app/TicTacToeServer
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Debug -o out
 
 
 FROM microsoft/dotnet:2.1-runtime AS runtime

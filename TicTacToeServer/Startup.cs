@@ -71,6 +71,8 @@ namespace TicTacToeServer
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
+			Console.WriteLine(string.Format("Redis:Hos :{0}", Configuration["Redis:Host"]));
+
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			} else {
