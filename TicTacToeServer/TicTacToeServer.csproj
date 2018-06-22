@@ -33,12 +33,12 @@
     <Folder Include="Infrastructures\" />
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
-    <Folder Include="Core\" />
-    <Folder Include="Entitys\" />
-    <Folder Include="Repositorys\" />
-    <Folder Include="Repositorys\EntityFramework\" />
-    <Folder Include="Repositorys\Redis\" />
-    <Folder Include="Repositorys\IRepositorys\" />
+    <Folder Include="Cores\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\EntityFramework\" />
+    <Folder Include="Repositories\Redis\" />
+    <Folder Include="Repositories\IRepositorys\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Infrastructures\SignalRItem.cs" />
