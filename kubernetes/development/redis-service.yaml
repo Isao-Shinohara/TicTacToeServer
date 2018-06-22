@@ -4,15 +4,13 @@ metadata:
   name: redis
   labels:
     app: redis
-    role: master
     tier: backend
 spec:
   type: NodePort
   ports:
-  - port: 6379
-    targetPort: 6379
+  - port: 30000
+    targetPort: 30000
     nodePort: 30000
   selector:
     app: redis
-    role: master
     tier: backend
