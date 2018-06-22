@@ -1,6 +1,13 @@
 {
     "profiles": {
-        "TicTacToeServer": {
+        "Local": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Local"
+            }
+        },
+        "Dev": {
             "commandName": "Project",
             "launchBrowser": true,
             "environmentVariables": {

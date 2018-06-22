@@ -41,7 +41,7 @@ namespace TicTacToeServer
 
 			services.AddDistributedRedisCache(option =>
 			{
-				option.Configuration = "127.0.0.1";
+				option.Configuration = string.Format("{0}:{1}", Configuration["Redis:Host"], Configuration["Redis:Port"]);
 				option.InstanceName = "master";
 			});
 
@@ -71,6 +71,8 @@ namespace TicTacToeServer
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
+			Console.WriteLine(string.Format("Redis: {0}:{1}", Configuration["Redis:Host"], Configuration["Redis:Port"]));
+
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			} else {

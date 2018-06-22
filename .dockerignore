@@ -1,0 +1,15 @@
+﻿# directories
+**/bin/
+**/obj/
+**/out/
+
+# files
+Dockerfile*
+**/*.trx
+**/*.md
+
+# other
+.git
+.gitignore
+.vs
+kubernetes
