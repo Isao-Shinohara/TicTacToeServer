@@ -5,8 +5,11 @@
 
 # files
 Dockerfile*
+**/*.trx
+**/*.md
+
+# other
 .git
 .gitignore
 .vs
-**/*.trx
-**/*.md
+kubernetes
