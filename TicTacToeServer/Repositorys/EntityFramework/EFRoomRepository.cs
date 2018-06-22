@@ -16,10 +16,10 @@ namespace TicTacToeServer.Repositorys.EntityFramework
 		public RoomEntity GetByRoomId(int roomId)
 		{
 			var room = efContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
-								 .FirstOrDefault(x => x.Id == roomId);
+			                    .FirstOrDefault(x => x.RoomId == roomId);
 			if (room != null) return room;
 
-			return efContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.Id == roomId);
+			return efContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.RoomId == roomId);
 		}
 
 		public RoomEntity GetByRoomNumber(int roomNumber)

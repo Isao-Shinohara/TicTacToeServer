@@ -13,7 +13,7 @@ namespace TicTacToeServer.Repositorys
 
 		public PlayerEntity GetById(int id)
 		{
-			return efContext.PlayerSet.FirstOrDefault(x => x.Id == id);
+			return efContext.PlayerSet.FirstOrDefault(x => x.RoomId == id);
 		}
 
 		public PlayerEntity GetByConnectionId(string connectionId)

@@ -1,7 +1,10 @@
-﻿namespace TicTacToeServer.Entitys
+﻿using MessagePack;
+
+namespace TicTacToeServer.Entitys
 {
-	public class Entity
+	[MessagePackObject]
+	public abstract class Entity
 	{
-		public int Id { get; private set; }
+		public abstract void SetId(int id);
 	}
 }

@@ -2,28 +2,37 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using MessagePack;
 using TicTacToeServer.Cores;
 
 namespace TicTacToeServer.Entitys
 {
+	[MessagePackObject]
 	public class RoomEntity : Entity
 	{
+		[Key(0)]
+		public int RoomId { get; private set; }
+		[Key(1)]
 		public int RoomNumber { get; private set; }
+		[Key(2)]
 		public RoomType RoomType { get; private set; }
+		[Key(3)]
 		public TurnType NowTurnType { get; private set; }
 
+		[Key(4)]
 		public int _1stPlayerId { get; set; }
+		[Key(5)]
 		[ForeignKey("_1stPlayerId")]
 		public PlayerEntity _1stPlayer { get; private set; }
 
+		[Key(6)]
 		public int _2ndPlayerId { get; set; }
+		[Key(7)]
 		[ForeignKey("_2ndPlayerId")]
 		public PlayerEntity _2ndPlayer { get; private set; }
 
+		[Key(8)]
 		public List<PanelAreaEntity> PanelAreaList { get; private set; }
-
-		[NotMapped]
-		private Random random = new Random();
 
 		public RoomEntity()
 		{
@@ -41,6 +50,12 @@ namespace TicTacToeServer.Entitys
 			PanelAreaList = GetInitialPanelArea();
 		}
 
+		public override void SetId(int id)
+		{
+			RoomId = id;
+		}
+
+		[IgnoreMember]
 		public bool IsSingle
 		{
 			get {
@@ -48,6 +63,7 @@ namespace TicTacToeServer.Entitys
 			}
 		}
 
+		[IgnoreMember]
 		public bool IsMulti
 		{
 			get {
@@ -55,6 +71,57 @@ namespace TicTacToeServer.Entitys
 			}
 		}
 
+		[IgnoreMember]
+		public bool IsClear
+		{
+			get {
+				var list = PanelAreaList.Where(x => x.TurnType == TurnType._1stPlayer).ToList();
+				var isClear = isClearWithPanelAreaList(list);
+				if (isClear) return true;
+
+				list = PanelAreaList.Where(x => x.TurnType == TurnType._2ndPlayer).ToList();
+				isClear = isClearWithPanelAreaList(list);
+				if (isClear) return true;
+
+				return false;
+			}
+		}
+
+
+		[IgnoreMember]
+		public bool IsEnd
+		{
+			get {
+				return PanelAreaList.All(x => x.Selected);
+			}
+		}
+
+		[IgnoreMember]
+		public ResultType _1stPlayerResult
+		{
+			get {
+				return GetResult(TurnType._1stPlayer);
+			}
+		}
+
+		[IgnoreMember]
+		public ResultType _2ndPlayerResult
+		{
+			get {
+				return GetResult(TurnType._2ndPlayer);
+			}
+		}
+
+		[IgnoreMember]
+		public bool CanPlayAI
+		{
+			get {
+				return RoomType == RoomType.Single && !IsClear && !IsEnd;
+			}
+		}
+
+
+		[IgnoreMember]
 		public bool Exsists2ndPlayer
 		{
 			get {
@@ -79,6 +146,7 @@ namespace TicTacToeServer.Entitys
 		public PanelAreaType SelectPanelAreaByAI()
 		{
 			var canSelectPanelAreaList = PanelAreaList.Where(x => !x.Selected).ToList();
+			var random = new Random();
 			var index = random.Next(canSelectPanelAreaList.Count);
 			var panelAreaType = canSelectPanelAreaList[index].PanelAreaType;
 			SelectPanelArea(_2ndPlayer, panelAreaType);
@@ -101,22 +169,7 @@ namespace TicTacToeServer.Entitys
 			return NowTurnType;
 		}
 
-		public bool IsClear
-		{
-			get {
-				var list = PanelAreaList.Where(x => x.TurnType == TurnType._1stPlayer).ToList();
-				var isClear = isClearWithPanelAreaList(list);
-				if (isClear) return true;
-
-				list = PanelAreaList.Where(x => x.TurnType == TurnType._2ndPlayer).ToList();
-				isClear = isClearWithPanelAreaList(list);
-				if (isClear) return true;
-
-				return false;
-			}
-		}
-
-		private bool isClearWithPanelAreaList(List<PanelAreaEntity> list)
+		bool isClearWithPanelAreaList(List<PanelAreaEntity> list)
 		{
 			var selectedArea1 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area1 && x.Selected);
 			var selectedArea2 = list.Exists(x => x.PanelAreaType == PanelAreaType.Area2 && x.Selected);
@@ -153,34 +206,7 @@ namespace TicTacToeServer.Entitys
 			return false;
 		}
 
-		public bool IsEnd
-		{
-			get {
-				return PanelAreaList.All(x => x.Selected);
-			}
-		}
-
-		public ResultType _1stPlayerResult
-		{
-			get {
-				return GetResult(TurnType._1stPlayer);
-			}
-		}
-
-		public ResultType _2ndPlayerResult
-		{
-			get {
-				return GetResult(TurnType._2ndPlayer);
-			}
-		}
-
-		public bool CanPlayAI {
-			get {
-				return RoomType == RoomType.Single && !IsClear && !IsEnd;
-			}
-		}
-
-		private ResultType GetResult(TurnType turnType)
+		ResultType GetResult(TurnType turnType)
 		{
 			var list = PanelAreaList.Where(x => x.TurnType == TurnType._1stPlayer).ToList();
 			var isClear = isClearWithPanelAreaList(list);
@@ -209,7 +235,7 @@ namespace TicTacToeServer.Entitys
 			return ResultType.None;
 		}
 
-		private List<PanelAreaEntity> GetInitialPanelArea()
+		List<PanelAreaEntity> GetInitialPanelArea()
 		{
 			return new List<PanelAreaEntity>() {
 				new PanelAreaEntity(PanelAreaType.Area1),

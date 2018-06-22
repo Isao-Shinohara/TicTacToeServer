@@ -14,45 +14,40 @@ namespace TicTacToeServer.Repositorys.Redis
 
 		public RoomEntity GetByRoomId(int roomId)
 		{
-			//var key = string.Format("roomId:{0}", roomId);
-			//var existingTime = (RoomEntity)cache.Get(key);
-
-			//var room = efContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
-			//					 .FirstOrDefault(x => x.Id == roomId);
-			//if (room != null) return room;
-
-			//return efContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.Id == roomId);
-
-			return null;
+			return Get(nameof(roomId), roomId);
 		}
 
 		public RoomEntity GetByRoomNumber(int roomNumber)
 		{
-			//var room = efContext.RoomSet.Include(x => x._1stPlayer).Include(x => x._2ndPlayer).Include(x => x.PanelAreaList)
-			//					 .FirstOrDefault(x => x.RoomNumber == roomNumber);
-			//if (room != null) return room;
-
-			//return efContext.RoomSet.Include(x => x.PanelAreaList).FirstOrDefault(x => x.RoomNumber == roomNumber);
-
-			return null;
+			var roomId = GetString(nameof(roomNumber), roomNumber);
+			return GetByRoomId(int.Parse(roomId));
 		}
 
 		public RoomEntity Create(RoomType roomType, PlayerEntity player)
 		{
-			//var room = new RoomEntity(roomType, player);
-			//efContext.Update(room);
-			//return room;
-
-			return null;
+			var room = new RoomEntity(roomType, player);
+			SetPrimaryId(room);
+			Set(nameof(room.RoomId), room.RoomId, room);
+			return room;
 		}
 
 		public RoomEntity Create(int roomNumber, RoomType roomType, PlayerEntity player)
 		{
-			//var room = new RoomEntity(roomNumber, roomType, player);
-			//efContext.Update(room);
-			//return room;
+			var room = new RoomEntity(roomNumber, roomType, player);
+			SetPrimaryId(room);
+			Set(nameof(room.RoomId), room.RoomId, room);
+			return room;
+		}
 
-			return null;
+		public void Save(RoomEntity room)
+		{
+			Set(nameof(room.RoomId), room.RoomId, room);
+		}
+
+		public void Remove(RoomEntity room)
+		{
+			Remove(nameof(room.RoomNumber), room.RoomNumber);
+			Remove(nameof(room.RoomId), room.RoomId);
 		}
 	}
 }

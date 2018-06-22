@@ -15,9 +15,6 @@ namespace TicTacToeServer.Infrastructures
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<PanelAreaEntity>()
-			            .HasOne(p => p.RoomEntity)
-			            .WithMany(b => b.PanelAreaList);
 		}
 	}
 }

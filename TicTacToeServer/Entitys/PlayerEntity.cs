@@ -1,19 +1,35 @@
-﻿namespace TicTacToeServer.Entitys
+﻿using MessagePack;
+
+namespace TicTacToeServer.Entitys
 {
+	[MessagePackObject]
 	public class PlayerEntity : Entity
 	{
+		public const string 	AIConnectionId = "ai";
+
+		[Key(0)]
+		public int PlayerId { get; private set; }
+		[Key(1)]
 		public string ConnectionId { get; private set; }
+		[Key(2)]
 		public int RoomId { get; private set; }
 
 		public PlayerEntity()
 		{
-			ConnectionId = "auto";
+			ConnectionId = AIConnectionId;
 		}
+
 		public PlayerEntity(string connectionId)
 		{
 			ConnectionId = connectionId;
 		}
 
+		public override void SetId(int id)
+		{
+			PlayerId = id;
+		}
+
+		[IgnoreMember]
 		public bool IsAI
 		{
 			get {

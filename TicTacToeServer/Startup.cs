@@ -46,7 +46,7 @@ namespace TicTacToeServer
 			});
 
 			// set extensions to default resolver.
-			MessagePack.Resolvers.CompositeResolver.RegisterAndSetAsDefault(
+			CompositeResolver.RegisterAndSetAsDefault(
 				// enable extension packages first
 				ImmutableCollectionResolver.Instance,
 				ReactivePropertyResolver.Instance,
@@ -54,7 +54,7 @@ namespace TicTacToeServer
 				MessagePack.Unity.UnityResolver.Instance,
 
 				// finaly use standard(default) resolver
-				StandardResolver.Instance
+				StandardResolverAllowPrivate.Instance
 			);
 
 			//services.AddMvc();

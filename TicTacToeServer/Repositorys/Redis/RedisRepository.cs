@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MessagePack;
 using Microsoft.Extensions.Caching.Distributed;
+using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
 
 namespace TicTacToeServer.Repositorys.Redis
@@ -14,25 +16,47 @@ namespace TicTacToeServer.Repositorys.Redis
 			this.cache = cache;
 		}
 
-		public void Save()
+		protected void SetPrimaryId(T eintity)
 		{
+			var primaryId = 1;
+
+			var key = string.Format("{0}:primaryid", typeof(T).Name);
+			var id = cache.GetString(key);
+			if(id != null){
+				primaryId = int.Parse(id);
+			}
+			eintity.SetId(primaryId);
+
+			primaryId++;
+			cache.SetString(key, primaryId.ToString());
 		}
 
-		public void Remove(T entiry)
+		protected T Get(string key, object id)
 		{
+			var bytes = cache.Get(ConvertToRedisKey(key, id));
+			if (bytes == null) return null;
+			return MessagePackSerializer.Deserialize<T>(bytes);
 		}
 
-		//public string Get()
-		//{
-		//	var cacheKey = "TheTime";
-		//	var existingTime = cache.GetString(cacheKey);
-		//	if (!string.IsNullOrEmpty(existingTime)) {
-		//		return "Fetched from cache : " + existingTime;
-		//	} else {
-		//		existingTime = DateTime.UtcNow.ToString();
-		//		cache.SetString(cacheKey, existingTime);
-		//		return "Added to cache : " + existingTime;
-		//	}
-		//}
+		protected string GetString(string key, object id)
+		{
+			return cache.GetString(ConvertToRedisKey(key, id));
+		}
+
+		protected void Set(string key, object id, T entity)
+		{
+			var bytes =  MessagePackSerializer.Serialize(entity);
+			cache.Set(ConvertToRedisKey(key, id), bytes);
+		}
+
+		protected void Remove(string key, object id)
+		{
+			cache.Remove(ConvertToRedisKey(key, id));
+		}
+
+		protected string ConvertToRedisKey(string key, object id)
+		{
+			return string.Format("{0}:{1}:{2}", typeof(T).Name.ToLower(), key.ToLower(), id);
+		}
 	}
 }
