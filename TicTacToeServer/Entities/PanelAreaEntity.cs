@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System;
+using MessagePack;
 using TicTacToeServer.Cores;
 
 namespace TicTacToeServer.Entitys
@@ -33,6 +34,18 @@ namespace TicTacToeServer.Entitys
 		{
 			TurnType = turnType;
 			Selected = true;
+		}
+
+		public override bool Equals(object obj)
+		{
+			var entity = obj as PanelAreaEntity;
+			return entity != null &&
+				   PanelAreaId == entity.PanelAreaId;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(PanelAreaId);
 		}
 	}
 }
