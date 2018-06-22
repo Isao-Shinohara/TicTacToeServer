@@ -136,7 +136,7 @@ namespace TicTacToeServer.Entitys
 
 		public PanelAreaType SelectPanelArea(PlayerEntity player, PanelAreaType panelAreaType)
 		{
-			var turnType = player == _1stPlayer ? TurnType._1stPlayer : TurnType._2ndPlayer;
+			var turnType = player.Equals(_1stPlayer) ? TurnType._1stPlayer : TurnType._2ndPlayer;
 			var panel = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == panelAreaType);
 			panel.SetTurnType(turnType);
 
@@ -248,6 +248,18 @@ namespace TicTacToeServer.Entitys
 				new PanelAreaEntity(PanelAreaType.Area8),
 				new PanelAreaEntity(PanelAreaType.Area9),
 			};
+		}
+
+		public override bool Equals(object obj)
+		{
+			var entity = obj as RoomEntity;
+			return entity != null &&
+				   RoomId == entity.RoomId;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(RoomId);
 		}
 	}
 }

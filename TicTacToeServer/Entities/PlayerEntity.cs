@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System;
+using MessagePack;
 
 namespace TicTacToeServer.Entitys
 {
@@ -33,13 +34,25 @@ namespace TicTacToeServer.Entitys
 		public bool IsAI
 		{
 			get {
-				return ConnectionId != "";
+				return ConnectionId == "";
 			}
 		}
 
 		public void SetRoomId(int roomId)
 		{
 			RoomId = roomId;
+		}
+
+		public override bool Equals(object obj)
+		{
+			var entity = obj as PlayerEntity;
+			return entity != null &&
+				   PlayerId == entity.PlayerId;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(PlayerId);
 		}
 	}
 }
