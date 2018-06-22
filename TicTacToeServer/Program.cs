@@ -20,7 +20,7 @@ namespace TicTacToeServer
 
 		public static IWebHost BuildWebHost(string[] args) =>
 			WebHost.CreateDefaultBuilder(args)
-				.UseKestrel(a => a.Listen(IPAddress.Any, 8000, o => o.UseHttps("server.pfx", "password")))
+		        .UseKestrel(a => a.Listen(IPAddress.Any, 30001, o => o.UseHttps("server.pfx", "password")))
 				.UseContentRoot(Directory.GetCurrentDirectory())
 				.UseStartup<Startup>()
 				.Build();
