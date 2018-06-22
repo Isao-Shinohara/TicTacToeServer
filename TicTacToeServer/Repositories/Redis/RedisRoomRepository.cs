@@ -20,6 +20,7 @@ namespace TicTacToeServer.Repositorys.Redis
 		public RoomEntity GetByRoomNumber(int roomNumber)
 		{
 			var roomId = GetString(nameof(roomNumber), roomNumber);
+			if(String.IsNullOrEmpty(roomId)) return null;
 			return GetByRoomId(int.Parse(roomId));
 		}
 
