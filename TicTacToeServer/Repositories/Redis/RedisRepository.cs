@@ -38,15 +38,20 @@ namespace TicTacToeServer.Repositorys.Redis
 			return MessagePackSerializer.Deserialize<T>(bytes);
 		}
 
+		protected void Set(string key, object id, T entity)
+		{
+			var bytes = MessagePackSerializer.Serialize(entity);
+			cache.Set(ConvertToRedisKey(key, id), bytes);
+		}
+
 		protected string GetString(string key, object id)
 		{
 			return cache.GetString(ConvertToRedisKey(key, id));
 		}
 
-		protected void Set(string key, object id, T entity)
+		protected void SetString(string key, object id, object value)
 		{
-			var bytes =  MessagePackSerializer.Serialize(entity);
-			cache.Set(ConvertToRedisKey(key, id), bytes);
+			cache.SetString(ConvertToRedisKey(key, id), value.ToString());
 		}
 
 		protected void Remove(string key, object id)

@@ -29,6 +29,7 @@ namespace TicTacToeServer.Repositorys.Redis
 			var room = new RoomEntity(roomType, player);
 			SetPrimaryId(room);
 			Set(nameof(room.RoomId), room.RoomId, room);
+			SetString(nameof(room.RoomNumber), room.RoomNumber, room.RoomId);
 			return room;
 		}
 
@@ -37,6 +38,7 @@ namespace TicTacToeServer.Repositorys.Redis
 			var room = new RoomEntity(roomNumber, roomType, player);
 			SetPrimaryId(room);
 			Set(nameof(room.RoomId), room.RoomId, room);
+			SetString(nameof(room.RoomNumber), room.RoomNumber, room.RoomId);
 			return room;
 		}
 
