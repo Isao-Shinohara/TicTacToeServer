@@ -1,34 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Entitys;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Repositorys;
+using TicTacToeServer.Repositorys.EntityFramework;
+using TicTacToeServer.Repositorys.Redis;
 
 namespace TicTacToeServer.Services
 {
 	public class AppService
 	{
-		SignalRContext signalRContext;
-		PlayerRepository playerRepository;
-		RoomRepository roomRepository;
-		PanelAreaRepository panelAreaRepository;
+		EFContext efContext;
+		RedisPlayerRepository playerRepository;
+		RedisRoomRepository roomRepository;
 
-		public AppService(SignalRContext context)
+		public AppService(EFContext context, IDistributedCache cache)
 		{
-			signalRContext = context;
-			playerRepository = new PlayerRepository(context);
-			roomRepository = new RoomRepository(context);
-			panelAreaRepository = new PanelAreaRepository(context);
+			efContext = context;
+			playerRepository = new RedisPlayerRepository(cache);
+			roomRepository = new RedisRoomRepository(cache);
 		}
 
 		public void AddPlayer(string connectionId)
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			if (player == null) {
+				playerRepository.GetByConnectionId(connectionId);
 				playerRepository.Create(connectionId);
-				playerRepository.Save();
 			}
 		}
 
@@ -39,11 +40,9 @@ namespace TicTacToeServer.Services
 				var room = roomRepository.GetByRoomId(player.RoomId);
 				if(room != null){
 					roomRepository.Remove(room);
-					roomRepository.Save();
 				}
 
 				playerRepository.Remove(player);
-				playerRepository.Save();
 			}
 		}
 
@@ -58,9 +57,8 @@ namespace TicTacToeServer.Services
 
 			var newRoom = roomRepository.Create(roomNumber, RoomType.Multi, player);
 
-			roomRepository.Save();
-			player.SetRoomId(newRoom.Id);
-			playerRepository.Save();
+			player.SetRoomId(newRoom.RoomId);
+			playerRepository.Save(player);
 
 			return (TurnType._1stPlayer, "");
 		}
@@ -75,27 +73,28 @@ namespace TicTacToeServer.Services
 			}
 
 			room.Set2ndPlayer(player);
-			roomRepository.Save();
+			roomRepository.Save(room);
 
-			player.SetRoomId(room.Id);
-			playerRepository.Save();
+			player.SetRoomId(room.RoomId);
+			playerRepository.Save(player);
 
 			return (TurnType._2ndPlayer, "");
 		}
 
 		public (TurnType TurnType, string ErrorMessage) InitializeGame(string connectionId)
 		{
-			var player = playerRepository.GetByConnectionId(connectionId);
-			var newRoom = roomRepository.Create(RoomType.Single, player);
-			roomRepository.Save();
+			var _1stPlayer = playerRepository.GetByConnectionId(connectionId);
+			var newRoom = roomRepository.Create(RoomType.Single, _1stPlayer);
 
-			player.SetRoomId(newRoom.Id);
+			_1stPlayer.SetRoomId(newRoom.RoomId);
+			playerRepository.Save(_1stPlayer);
+
 			var _2ndPlayer = playerRepository.Create();
-			_2ndPlayer.SetRoomId(newRoom.Id);
-			playerRepository.Save();
+			_2ndPlayer.SetRoomId(newRoom.RoomId);
+			playerRepository.Save(_2ndPlayer);
 
 			newRoom.Set2ndPlayer(_2ndPlayer);
-			roomRepository.Save();
+			roomRepository.Save(newRoom);
 
 			return (TurnType._1stPlayer, "");
 		}
@@ -118,7 +117,7 @@ namespace TicTacToeServer.Services
 
 			room.SelectPanelArea(player, panelAreaType);
 			room.NextTurn();
-			roomRepository.Save();
+			roomRepository.Save(room);
 
 			List<string> connectionIds = new List<string>() { room._1stPlayer.ConnectionId };
 			if (room.IsMulti && room.Exsists2ndPlayer) connectionIds.Add(room._2ndPlayer.ConnectionId);
@@ -130,7 +129,7 @@ namespace TicTacToeServer.Services
 		{
 			var panelAreaType = room.SelectPanelAreaByAI();
 			room.NextTurn();
-			roomRepository.Save();
+			roomRepository.Save(room);
 
 			return (room, panelAreaType);
 		}

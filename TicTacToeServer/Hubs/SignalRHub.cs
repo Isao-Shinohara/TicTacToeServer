@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Cores;
 using TicTacToeServer.Infrastructures;
 using TicTacToeServer.Services;
@@ -13,10 +14,10 @@ namespace TicTacToeServer.Hubs
 	{
 		AppService appService;
 
-		public SignalRHub(SignalRContext context)
+		public SignalRHub(EFContext efContext, IDistributedCache cache)
 		{
 			AppSignalRLogger.Level = AppSignalRLogger.Loglevels.Verbose;
-			appService = new AppService(context);
+			appService = new AppService(efContext, cache);
 		}
 
 		public override Task OnConnectedAsync()
@@ -83,14 +84,12 @@ namespace TicTacToeServer.Hubs
 			AppSignalRLogger.LogVerbose("[Called '{0}'] {1}", MethodBase.GetCurrentMethod().Name, panelAreaType);
 			var result = appService.SelectPanelArea(Context.ConnectionId, panelAreaType);
 			var message = SignalRClientMessage.Create(result.ConnectionIds, MethodBase.GetCurrentMethod().Name, panelAreaType, result.Room._1stPlayerResult, result.Room._2ndPlayerResult, result.Room.NowTurnType);
-			AppSignalRLogger.LogVerbose("[SelectPanelArea Result] {0} {1} {2}", result.Room._1stPlayerResult, result.Room._2ndPlayerResult, result.Room.NowTurnType);
 			CallClientMethod(message);
 
 			if (result.Room.CanPlayAI) {
 				Thread.Sleep(1000);
 				var aiResult = appService.SelectPanelAreaByAI(result.Room);
 				var aiMessage = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name, aiResult.SelectedPanelAreaType, aiResult.Room._1stPlayerResult, aiResult.Room._2ndPlayerResult, aiResult.Room.NowTurnType);
-				AppSignalRLogger.LogVerbose("[SelectPanelAreaByAI Result] {0} {1} {2}", aiResult.Room._1stPlayerResult, aiResult.Room._2ndPlayerResult, aiResult.Room.NowTurnType);
 				CallClientMethod(aiMessage);
 			}
 		}

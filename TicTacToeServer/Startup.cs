@@ -39,8 +39,14 @@ namespace TicTacToeServer
 				});
 			});
 
+			services.AddDistributedRedisCache(option =>
+			{
+				option.Configuration = "127.0.0.1";
+				option.InstanceName = "master";
+			});
+
 			// set extensions to default resolver.
-			MessagePack.Resolvers.CompositeResolver.RegisterAndSetAsDefault(
+			CompositeResolver.RegisterAndSetAsDefault(
 				// enable extension packages first
 				ImmutableCollectionResolver.Instance,
 				ReactivePropertyResolver.Instance,
@@ -48,7 +54,7 @@ namespace TicTacToeServer
 				MessagePack.Unity.UnityResolver.Instance,
 
 				// finaly use standard(default) resolver
-				StandardResolver.Instance
+				StandardResolverAllowPrivate.Instance
 			);
 
 			//services.AddMvc();
@@ -59,7 +65,7 @@ namespace TicTacToeServer
 				options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Instance));
 			});
 
-			services.AddDbContext<SignalRContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
+			services.AddDbContext<EFContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

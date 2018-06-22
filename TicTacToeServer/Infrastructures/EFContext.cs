@@ -3,9 +3,9 @@ using TicTacToeServer.Entitys;
 
 namespace TicTacToeServer.Infrastructures
 {
-	public class SignalRContext : DbContext
+	public class EFContext : DbContext
 	{
-		public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
+		public EFContext(DbContextOptions<EFContext> options) : base(options)
 		{
 		}
 
@@ -15,9 +15,6 @@ namespace TicTacToeServer.Infrastructures
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<PanelAreaEntity>()
-			            .HasOne(p => p.RoomEntity)
-			            .WithMany(b => b.PanelAreaList);
 		}
 	}
 }

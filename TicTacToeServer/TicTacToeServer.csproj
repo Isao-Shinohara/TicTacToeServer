@@ -21,6 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.1" />
+    <PackageReference Include="MessagePackAnalyzer" Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +33,15 @@
     <Folder Include="Infrastructures\" />
     <Folder Include="Hubs\" />
     <Folder Include="Services\" />
-    <Folder Include="Core\" />
-    <Folder Include="Entitys\" />
-    <Folder Include="Repositorys\" />
+    <Folder Include="Cores\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\EntityFramework\" />
+    <Folder Include="Repositories\Redis\" />
+    <Folder Include="Repositories\IRepositorys\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Infrastructures\SignalRItem.cs" />
+    <Compile Remove="Infrastructures\RedisContext.cs" />
   </ItemGroup>
 </Project>
