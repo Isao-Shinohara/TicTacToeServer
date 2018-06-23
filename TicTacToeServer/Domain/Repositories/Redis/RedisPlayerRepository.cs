@@ -1,10 +1,7 @@
-﻿using System;
-using Microsoft.Extensions.Caching.Distributed;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
-using TicTacToeServer.Repositorys.IRepositorys;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using TicTacToeServer.Domain.Entitys;
 
-namespace TicTacToeServer.Repositorys.Redis
+namespace TicTacToeServer.Domain.Repositorys.Redis
 {
 	public class RedisPlayerRepository : RedisRepository<PlayerEntity>
 	{

@@ -1,7 +1,7 @@
-﻿using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
+﻿using TicTacToeServer.Core;
+using TicTacToeServer.Domain.Entitys;
 
-namespace TicTacToeServer.Repositorys.IRepositorys
+namespace TicTacToeServer.Domain.Repositorys.IRepositorys
 {
 	public interface IRoomRepository : IRepository<RoomEntity>
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TicTacToeServer.Cores
+namespace TicTacToeServer.Core
 {
 	public static class AppSignalRLogger
 	{

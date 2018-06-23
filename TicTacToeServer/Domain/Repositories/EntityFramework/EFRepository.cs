@@ -1,8 +1,7 @@
-﻿using TicTacToeServer.Entitys;
-using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Repositorys.IRepositorys;
+﻿using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Infrastructures;
 
-namespace TicTacToeServer.Repositorys
+namespace TicTacToeServer.Domain.Repositorys.EntityFramework
 {
 	public class EFRepository<T> where T : Entity
 	{

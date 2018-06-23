@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Distributed;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
-using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Repositorys;
-using TicTacToeServer.Repositorys.EntityFramework;
-using TicTacToeServer.Repositorys.Redis;
+using TicTacToeServer.Core;
+using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Infrastructures;
+using TicTacToeServer.Domain.Repositorys.Redis;
 
-namespace TicTacToeServer.Services
+namespace TicTacToeServer.Application.Services
 {
 	public class AppService
 	{

@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 
-namespace TicTacToeServer.Hubs
+namespace TicTacToeServer.Application.Hubs
 {
 	public class SignalRClientMessage
 	{
-		public List<string> Clients { get; private set; }
-		public string Method { get; private set; }
-		public object[] Argument { get; private set; }
+		public List<string> Clients { get; set; }
+		public string Method { get; set; }
+		public object[] Argument { get; set; }
 
-		private SignalRClientMessage(string client, string method)
+		SignalRClientMessage(string client, string method)
 		{
 			Clients = new List<string> { client };
 			Method = method;
 		}
 
-		private SignalRClientMessage(string client, string method, object[] argument)
+		SignalRClientMessage(string client, string method, object[] argument)
 		{
 			Clients = new List<string> { client };
 			Method = method;
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(string client, string method, object arg1)
+		SignalRClientMessage(string client, string method, object arg1)
 		{
 			Clients = new List<string> { client };
 			Method = method;
@@ -29,7 +29,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(string client, string method, object arg1, object arg2)
+		SignalRClientMessage(string client, string method, object arg1, object arg2)
 		{
 			Clients = new List<string> { client };
 			Method = method;
@@ -37,7 +37,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3)
+		SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3)
 		{
 			Clients = new List<string> { client };
 			Method = method;
@@ -45,7 +45,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3, object arg4)
+		SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3, object arg4)
 		{
 			Clients = new List<string> { client };
 			Method = method;
@@ -53,20 +53,20 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method)
+		SignalRClientMessage(List<string> clients, string method)
 		{
 			Clients = clients;
 			Method = method;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method, object[] argument)
+		SignalRClientMessage(List<string> clients, string method, object[] argument)
 		{
 			Clients = clients;
 			Method = method;
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method, object arg1)
+		SignalRClientMessage(List<string> clients, string method, object arg1)
 		{
 			Clients = clients;
 			Method = method;
@@ -74,7 +74,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method, object arg1, object arg2)
+		SignalRClientMessage(List<string> clients, string method, object arg1, object arg2)
 		{
 			Clients = clients;
 			Method = method;
@@ -82,7 +82,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3)
+		SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3)
 		{
 			Clients = clients;
 			Method = method;
@@ -90,7 +90,7 @@ namespace TicTacToeServer.Hubs
 			Argument = argument;
 		}
 
-		private SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4)
+		SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4)
 		{
 			Clients = clients;
 			Method = method;

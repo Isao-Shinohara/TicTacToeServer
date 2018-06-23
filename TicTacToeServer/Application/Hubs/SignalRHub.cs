@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Services;
+using TicTacToeServer.Core;
+using TicTacToeServer.Domain.Infrastructures;
+using TicTacToeServer.Application.Services;
 
-namespace TicTacToeServer.Hubs
+namespace TicTacToeServer.Application.Hubs
 {
 	public class SignalRHub : Hub
 	{

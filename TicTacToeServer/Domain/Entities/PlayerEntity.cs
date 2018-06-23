@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 
-namespace TicTacToeServer.Entitys
+namespace TicTacToeServer.Domain.Entitys
 {
 	[MessagePackObject]
 	public class PlayerEntity : Entity

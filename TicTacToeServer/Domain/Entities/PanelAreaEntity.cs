@@ -1,8 +1,8 @@
 ﻿using System;
 using MessagePack;
-using TicTacToeServer.Cores;
+using TicTacToeServer.Core;
 
-namespace TicTacToeServer.Entitys
+namespace TicTacToeServer.Domain.Entitys
 {
 	[MessagePackObject]
 	public class PanelAreaEntity : Entity

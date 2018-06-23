@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using MessagePack;
-using TicTacToeServer.Cores;
+using TicTacToeServer.Core;
 
-namespace TicTacToeServer.Entitys
+namespace TicTacToeServer.Domain.Entitys
 {
 	[MessagePackObject]
 	public class RoomEntity : Entity

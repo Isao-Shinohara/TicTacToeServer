@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TicTacToeServer.Entitys;
+using TicTacToeServer.Domain.Entitys;
 
-namespace TicTacToeServer.Infrastructures
+namespace TicTacToeServer.Domain.Infrastructures
 {
 	public class EFContext : DbContext
 	{

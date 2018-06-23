@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MessagePack.AspNetCoreMvcFormatter;
 using MessagePack.ImmutableCollection;
 using MessagePack.ReactivePropertyExtension;
@@ -12,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using TicTacToeServer.Hubs;
-using TicTacToeServer.Infrastructures;
+using TicTacToeServer.Application.Hubs;
+using TicTacToeServer.Domain.Infrastructures;
 
 namespace TicTacToeServer
 {

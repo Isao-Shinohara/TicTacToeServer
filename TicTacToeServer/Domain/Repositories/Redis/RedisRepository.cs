@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using MessagePack;
+﻿using MessagePack;
 using Microsoft.Extensions.Caching.Distributed;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
+using TicTacToeServer.Domain.Entitys;
 
-namespace TicTacToeServer.Repositorys.Redis
+namespace TicTacToeServer.Domain.Repositorys.Redis
 {
 	public class RedisRepository<T> where T : Entity
 	{

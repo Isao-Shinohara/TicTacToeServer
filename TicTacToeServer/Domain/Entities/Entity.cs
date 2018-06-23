@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace TicTacToeServer.Entitys
+namespace TicTacToeServer.Domain.Entitys
 {
 	[MessagePackObject]
 	public abstract class Entity

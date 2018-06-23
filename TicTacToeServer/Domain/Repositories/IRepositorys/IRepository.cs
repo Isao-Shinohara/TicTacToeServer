@@ -1,6 +1,6 @@
-﻿using TicTacToeServer.Entitys;
+﻿using TicTacToeServer.Domain.Entitys;
 
-namespace TicTacToeServer.Repositorys.IRepositorys
+namespace TicTacToeServer.Domain.Repositorys.IRepositorys
 {
 	public interface IRepository<T> where T : Entity
 	{

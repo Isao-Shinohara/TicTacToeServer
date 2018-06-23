@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
-using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Repositorys.IRepositorys;
+using TicTacToeServer.Core;
+using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Infrastructures;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
 
-namespace TicTacToeServer.Repositorys.EntityFramework
+namespace TicTacToeServer.Domain.Repositorys.EntityFramework
 {
 	public class EFRoomRepository : EFRepository<RoomEntity>, IRoomRepository
 	{

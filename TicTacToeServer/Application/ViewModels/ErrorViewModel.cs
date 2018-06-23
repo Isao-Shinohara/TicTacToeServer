@@ -1,6 +1,4 @@
-using System;
-
-namespace TicTacToeServer.Models
+namespace TicTacToeServer.Application.ViewModels
 {
 	public class ErrorViewModel
 	{

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using TicTacToeServer.Entitys;
-using TicTacToeServer.Infrastructures;
-using TicTacToeServer.Repositorys.IRepositorys;
+using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Infrastructures;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
 
-namespace TicTacToeServer.Repositorys
+namespace TicTacToeServer.Domain.Repositorys.EntityFramework
 {
 	public class EFPlayerRepository : EFRepository<PlayerEntity>, IPlayerRepository
 	{

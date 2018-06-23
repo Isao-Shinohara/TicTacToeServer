@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.Caching.Distributed;
-using TicTacToeServer.Cores;
-using TicTacToeServer.Entitys;
-using TicTacToeServer.Repositorys.IRepositorys;
+using TicTacToeServer.Core;
+using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
 
-namespace TicTacToeServer.Repositorys.Redis
+namespace TicTacToeServer.Domain.Repositorys.Redis
 {
 	public class RedisRoomRepository : RedisRepository<RoomEntity>, IRoomRepository
 	{
