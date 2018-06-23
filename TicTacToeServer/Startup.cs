@@ -27,7 +27,9 @@ namespace TicTacToeServer
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMemoryCache();
-			services.AddSignalR();
+
+			services.AddSignalR().AddRedis(string.Format("{0}:{1}", Configuration["Redis:Host"], Configuration["Redis:Port"]));
+
 			services.AddCors(options => {
 				options.AddPolicy("MyPolicy", builder => {
 					builder.AllowAnyOrigin()

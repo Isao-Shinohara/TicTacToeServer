@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: app
-        image: isaoshinohara/tictactoeserver
+        image: isaoshinohara/tictactoeserver:1
         ports:
         - containerPort: 30001
