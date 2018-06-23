@@ -31,22 +31,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructures\" />
-    <Folder Include="Hubs\" />
-    <Folder Include="Services\" />
-    <Folder Include="Cores\" />
-    <Folder Include="Entities\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Repositories\EntityFramework\" />
-    <Folder Include="Repositories\Redis\" />
-    <Folder Include="Repositories\IRepositorys\" />
+    <Folder Include="Core\" />
+    <Folder Include="Domain\Repositories\" />
+    <Folder Include="Application\" />
+    <Folder Include="Application\Controllers\" />
+    <Folder Include="Application\Hubs\" />
+    <Folder Include="Application\ViewModels\" />
+    <Folder Include="Application\Views\" />
+    <Folder Include="Application\Services\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\Infrastructures\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Infrastructures\SignalRItem.cs" />
     <Compile Remove="Infrastructures\RedisContext.cs" />
+    <Compile Remove="Repositories\Redis\RedisRoomRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="appsettings.Local.json" />
+    <Content Remove="Application\Views\_ViewStart.cshtml" />
+    <Content Remove="Application\Views\Home\About.cshtml" />
+    <Content Remove="Application\Views\Home\Contact.cshtml" />
+    <Content Remove="Application\Views\Home\Index.cshtml" />
+    <Content Remove="Application\Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="appsettings.Local.json" />
