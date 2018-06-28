@@ -71,6 +71,20 @@ namespace TicTacToeServer.Application.Hubs
 			CallClientMethod(message);
 		}
 
+		public void Ready()
+		{
+			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);
+			var result = appService.Ready(Context.ConnectionId);
+			var message = SignalRClientMessage.Create(Context.ConnectionId, MethodBase.GetCurrentMethod().Name);
+			CallClientMethod(message);
+
+			if(result.Room.IsReadyAllPlayer){
+				AppSignalRLogger.LogVerbose("[Call 'OnStartGame']");
+				var startGameMessage = SignalRClientMessage.Create(result.ConnectionIds, "StartGame");
+				CallClientMethod(startGameMessage);
+			}
+		}
+
 		public void StartGame()
 		{
 			AppSignalRLogger.LogVerbose("[Called '{0}']", MethodBase.GetCurrentMethod().Name);

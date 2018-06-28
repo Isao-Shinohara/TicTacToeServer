@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Core;
 using TicTacToeServer.Domain.Entitys;
@@ -95,15 +96,25 @@ namespace TicTacToeServer.Application.Services
 			return (TurnType._1stPlayer, "");
 		}
 
+		public void StartGame()
+		{
+			return;
+		}
+
 		public RoomEntity GetRoomByConnectionId(string connectionId)
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
 			return roomRepository.GetByRoomId(player.RoomId);
 		}
 
-		public void StartGame()
+		public (List<string> ConnectionIds, RoomEntity Room) Ready(string connectionId)
 		{
-			return;
+			var player = playerRepository.GetByConnectionId(connectionId);
+			var room = roomRepository.GetByRoomId(player.RoomId);
+			room.Ready(player);
+
+			List<string> connectionIds = new List<string>() { room._1stPlayer.ConnectionId, room._2ndPlayer.ConnectionId};
+			return (connectionIds, room);
 		}
 
 		public (List<string> ConnectionIds, RoomEntity Room) SelectPanelArea(string connectionId, PanelAreaType panelAreaType)
