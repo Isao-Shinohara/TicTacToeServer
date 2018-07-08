@@ -53,6 +53,22 @@ namespace TicTacToeServer.Application.Hubs
 			Argument = argument;
 		}
 
+		SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3, object arg4, object arg5)
+		{
+			Clients = new List<string> { client };
+			Method = method;
+			var argument = new object[] { arg1, arg2, arg3, arg4, arg5};
+			Argument = argument;
+		}
+
+		SignalRClientMessage(string client, string method, object arg1, object arg2, object arg3, object arg4, object arg5, object arg6)
+		{
+			Clients = new List<string> { client };
+			Method = method;
+			var argument = new object[] { arg1, arg2, arg3, arg4, arg5, arg6 };
+			Argument = argument;
+		}
+
 		SignalRClientMessage(List<string> clients, string method)
 		{
 			Clients = clients;
@@ -95,6 +111,22 @@ namespace TicTacToeServer.Application.Hubs
 			Clients = clients;
 			Method = method;
 			var argument = new object[] { arg1, arg2, arg3, arg4 };
+			Argument = argument;
+		}
+
+		SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4, object arg5)
+		{
+			Clients = clients;
+			Method = method;
+			var argument = new object[] { arg1, arg2, arg3, arg4, arg5 };
+			Argument = argument;
+		}
+
+		SignalRClientMessage(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4, object arg5, object arg6)
+		{
+			Clients = clients;
+			Method = method;
+			var argument = new object[] { arg1, arg2, arg3, arg4, arg5, arg6 };
 			Argument = argument;
 		}
 
@@ -150,6 +182,16 @@ namespace TicTacToeServer.Application.Hubs
 			return new SignalRClientMessage(client, ConvertCallMethod(method), arg1, arg2, arg3, arg4);
 		}
 
+		public static SignalRClientMessage Create(string client, string method, object arg1, object arg2, object arg3, object arg4, object arg5)
+		{
+			return new SignalRClientMessage(client, ConvertCallMethod(method), arg1, arg2, arg3, arg4, arg5);
+		}
+
+		public static SignalRClientMessage Create(string client, string method, object arg1, object arg2, object arg3, object arg4, object arg5, object arg6)
+		{
+			return new SignalRClientMessage(client, ConvertCallMethod(method), arg1, arg2, arg3, arg4, arg5, arg6);
+		}
+
 		public static SignalRClientMessage Create(List<string> clients, string method)
 		{
 			return new SignalRClientMessage(clients, ConvertCallMethod(method));
@@ -178,6 +220,16 @@ namespace TicTacToeServer.Application.Hubs
 		public static SignalRClientMessage Create(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4)
 		{
 			return new SignalRClientMessage(clients, ConvertCallMethod(method), arg1, arg2, arg3, arg4);
+		}
+
+		public static SignalRClientMessage Create(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4, object arg5)
+		{
+			return new SignalRClientMessage(clients, ConvertCallMethod(method), arg1, arg2, arg3, arg4, arg5);
+		}
+
+		public static SignalRClientMessage Create(List<string> clients, string method, object arg1, object arg2, object arg3, object arg4, object arg5, object arg6)
+		{
+			return new SignalRClientMessage(clients, ConvertCallMethod(method), arg1, arg2, arg3, arg4, arg5, arg6);
 		}
 
 		public static string ConvertCallMethod(string method)
