@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Core;
 using TicTacToeServer.Domain.Entitys;
@@ -33,10 +32,15 @@ namespace TicTacToeServer.Application.Services
 		public void RemovePlayer(string connectionId)
 		{
 			var player = playerRepository.GetByConnectionId(connectionId);
-			if (player != null) {
+			if (player != null)
+			{
 				var room = roomRepository.GetByRoomId(player.RoomId);
 				if(room != null){
-					roomRepository.Remove(room);
+					room.Remove(player);
+					if(room.IsRemovedAllPlayer){
+						AppSignalRLogger.Log("Remove Room {0}", room.RoomId);
+						roomRepository.Remove(room);
+					}
 				}
 
 				playerRepository.Remove(player);
