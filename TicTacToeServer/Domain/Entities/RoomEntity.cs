@@ -117,6 +117,22 @@ namespace TicTacToeServer.Domain.Entitys
 		}
 
 		[IgnoreMember]
+		public List<PanelAreaType> _1stPlayerReachPanelAreaTypeList
+		{
+			get {
+				return GetReachPanelAreaTypeList(TurnType._1stPlayer);
+			}
+		}
+
+		[IgnoreMember]
+		public List<PanelAreaType> _2ndPlayerReachPanelAreaTypeList
+		{
+			get {
+				return GetReachPanelAreaTypeList(TurnType._2ndPlayer);
+			}
+		}
+
+		[IgnoreMember]
 		public bool CanPlayAI
 		{
 			get {
@@ -223,6 +239,52 @@ namespace TicTacToeServer.Domain.Entitys
 			if (isClear) return true;
 
 			return false;
+		}
+
+		List<PanelAreaType> GetReachPanelAreaTypeList(TurnType turnType)
+		{
+			var area1 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area1);
+			var area2 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area2);
+			var area3 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area3);
+			var area4 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area4);
+			var area5 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area5);
+			var area6 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area6);
+			var area7 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area7);
+			var area8 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area8);
+			var area9 = PanelAreaList.FirstOrDefault(x => x.PanelAreaType == PanelAreaType.Area9);
+
+			List<PanelAreaType> reachPanelAreaTypeList = new List<PanelAreaType>();
+
+			// Vertical
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area1, area2, area3);
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area4, area5, area6);
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area7, area8, area9);
+
+			// Horizontal
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area1, area4, area7);
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area2, area5, area8);
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area3, area6, area9);
+
+			// Diagonal
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area1, area5, area9);
+			addPanelAreaTypeWhenReach(reachPanelAreaTypeList, turnType, area3, area5, area7);
+
+			return reachPanelAreaTypeList;
+		}
+
+		void addPanelAreaTypeWhenReach(List<PanelAreaType> list, TurnType turnType, PanelAreaEntity area1, PanelAreaEntity area2, PanelAreaEntity area3)
+		{
+			int selectedCount = 0;
+			if (area1 != null && area1.TurnType == turnType && area1.Selected) selectedCount++;
+			if (area2 != null && area2.TurnType == turnType && area2.Selected) selectedCount++;
+			if (area3 != null && area3.TurnType == turnType && area3.Selected) selectedCount++;
+			if (selectedCount != 2) return;
+
+			if (area1.Selected && area2.Selected && area3.Selected) return;
+
+			if (!list.Contains(area1.PanelAreaType)) list.Add(area1.PanelAreaType);
+			if (!list.Contains(area2.PanelAreaType)) list.Add(area2.PanelAreaType);
+			if (!list.Contains(area3.PanelAreaType)) list.Add(area3.PanelAreaType);
 		}
 
 		ResultType GetResult(TurnType turnType)
