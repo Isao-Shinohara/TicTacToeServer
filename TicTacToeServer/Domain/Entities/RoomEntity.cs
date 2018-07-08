@@ -35,6 +35,9 @@ namespace TicTacToeServer.Domain.Entitys
 		public List<PlayerEntity> ReadyPlayerList { get; private set; }
 
 		[Key(9)]
+		public List<PlayerEntity> RemovedPlayerList { get; private set; }
+
+		[Key(10)]
 		public List<PanelAreaEntity> PanelAreaList { get; private set; }
 
 		public RoomEntity()
@@ -51,6 +54,7 @@ namespace TicTacToeServer.Domain.Entitys
 			RoomType = roomType;
 			this._1stPlayer = _1stPlayer;
 			ReadyPlayerList = new List<PlayerEntity>() { _1stPlayer };
+			RemovedPlayerList = new List<PlayerEntity>();
 			PanelAreaList = GetInitialPanelArea();
 		}
 
@@ -158,6 +162,14 @@ namespace TicTacToeServer.Domain.Entitys
 			}
 		}
 
+		[IgnoreMember]
+		public bool IsRemovedAllPlayer
+		{
+			get {
+				return RemovedPlayerList.Count >= 2;
+			}
+		}
+
 		public void Set2ndPlayer(PlayerEntity player)
 		{
 			_2ndPlayer = player;
@@ -167,6 +179,14 @@ namespace TicTacToeServer.Domain.Entitys
 		{
 			ReadyPlayerList.Add(player);
 			if(IsSingle) ReadyPlayerList.Add(_2ndPlayer);
+		}
+
+		public void Remove(PlayerEntity player)
+		{
+			if (RemovedPlayerList.Contains(player)) return;
+			RemovedPlayerList.Add(player);
+
+			if (IsSingle) RemovedPlayerList.Add(_2ndPlayer);
 		}
 
 		public PanelAreaType SelectPanelArea(PlayerEntity player, PanelAreaType panelAreaType)
