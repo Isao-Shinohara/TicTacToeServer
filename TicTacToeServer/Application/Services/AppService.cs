@@ -40,6 +40,8 @@ namespace TicTacToeServer.Application.Services
 					if(room.IsRemovedAllPlayer){
 						AppSignalRLogger.Log("Remove Room {0}", room.RoomId);
 						roomRepository.Remove(room);
+					} else {
+						roomRepository.Save(room);
 					}
 				}
 
