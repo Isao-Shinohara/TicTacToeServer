@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Domain.Entitys;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Domain.Repositorys.Redis
 {
-	public class RedisPlayerRepository : RedisRepository<PlayerEntity>
+	public class RedisPlayerRepository : RedisRepository<PlayerEntity>, IPlayerRepository
 	{
 		public RedisPlayerRepository(IDistributedCache cache) : base(cache)
 		{

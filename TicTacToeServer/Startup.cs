@@ -10,7 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using TicTacToeServer.Application.Hubs;
+using TicTacToeServer.Application.Services;
 using TicTacToeServer.Domain.Infrastructures;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
+using TicTacToeServer.Domain.Repositorys.Redis;
 
 namespace TicTacToeServer
 {
@@ -65,6 +68,11 @@ namespace TicTacToeServer
 			});
 
 			services.AddDbContext<EFContext>(opt => opt.UseInMemoryDatabase("TicTacToeServer"));
+
+			// Dependency Injection.
+			services.AddTransient<IPlayerRepository, RedisPlayerRepository>();
+			services.AddTransient<IRoomRepository, RedisRoomRepository>();
+			services.AddTransient<AppService, AppService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
