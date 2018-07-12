@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Distributed;
 using TicTacToeServer.Core;
 using TicTacToeServer.Domain.Entitys;
-using TicTacToeServer.Domain.Infrastructures;
-using TicTacToeServer.Domain.Repositorys.Redis;
+using TicTacToeServer.Domain.Repositorys.IRepositorys;
 
 namespace TicTacToeServer.Application.Services
 {
 	public class AppService
 	{
-		EFContext efContext;
-		RedisPlayerRepository playerRepository;
-		RedisRoomRepository roomRepository;
+		IPlayerRepository playerRepository;
+		IRoomRepository roomRepository;
 
-		public AppService(EFContext context, IDistributedCache cache)
+		public AppService(IPlayerRepository playerRepository, IRoomRepository roomRepository)
 		{
-			efContext = context;
-			playerRepository = new RedisPlayerRepository(cache);
-			roomRepository = new RedisRoomRepository(cache);
+			this.playerRepository = playerRepository;
+			this.roomRepository = roomRepository;
 		}
 
 		public void AddPlayer(string connectionId)

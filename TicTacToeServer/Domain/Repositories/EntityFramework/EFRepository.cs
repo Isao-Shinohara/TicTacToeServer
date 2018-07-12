@@ -12,7 +12,7 @@ namespace TicTacToeServer.Domain.Repositorys.EntityFramework
 			this.efContext = efContext;
 		}
 
-		public void Save()
+		public void Save(T entiry)
 		{
 			efContext.SaveChanges();
 		}
