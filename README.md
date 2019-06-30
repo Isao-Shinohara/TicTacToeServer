@@ -1,5 +1,10 @@
 # TicTacToeServer
 
+## Run by dotnet-cli
+```
+dotnet run --project TicTacToeServer > /tmp/TicTacToeServer.log 2>&1 &
+```
+
 ## Build container image with docker
 ```
 docker login
