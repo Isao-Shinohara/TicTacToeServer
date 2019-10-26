@@ -5,6 +5,7 @@ using MessagePack.ReactivePropertyExtension;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,7 +77,7 @@ namespace TicTacToeServer
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			Console.WriteLine(string.Format("Redis: {0}:{1}", Configuration["Redis:Host"], Configuration["Redis:Port"]));
 
@@ -92,17 +93,16 @@ namespace TicTacToeServer
 			});
 
 			app.UseCors("MyPolicy");
+			app.UseRouting();
+			app.UseDefaultFiles();
 
-			app.UseMvc(routes => {
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+			app.UseEndpoints(routes => {
+				routes.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 			});
 
-			app.UseSignalR(route => {
+			app.UseEndpoints(route => {
 				route.MapHub<SignalRHub>("/signalr");
 			});
-			app.UseDefaultFiles();
 		}
 	}
 }
