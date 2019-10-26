@@ -93,6 +93,8 @@ namespace TicTacToeServer
 			});
 
 			app.UseCors("MyPolicy");
+			app.UseRouting();
+			app.UseDefaultFiles();
 
 			app.UseEndpoints(routes => {
 				routes.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
@@ -101,7 +103,6 @@ namespace TicTacToeServer
 			app.UseEndpoints(route => {
 				route.MapHub<SignalRHub>("/signalr");
 			});
-			app.UseDefaultFiles();
 		}
 	}
 }
