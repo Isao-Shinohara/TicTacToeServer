@@ -9,7 +9,7 @@
     <PackageReference Include="MessagePack" Version="1.8.74" />
     <PackageReference Include="MessagePack.AspNetCoreMvcFormatter" Version="1.8.74" />
     <PackageReference Include="MessagePack.ImmutableCollection" Version="1.8.74" />
-    <PackageReference Include="MessagePack.ReactiveProperty" Version="1.8.74" />
+    <PackageReference Include="MessagePack.ReactiveProperty" Version="1.9.3" />
     <PackageReference Include="MessagePack.UnityShims" Version="1.8.74" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0" />
